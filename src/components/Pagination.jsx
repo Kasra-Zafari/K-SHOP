@@ -14,7 +14,6 @@ export default function Pagination({ currentPage, totalPages }) {
   const pagesToShow = [];
 
   for (let i = 1; i <= totalPages; i++) {
-    // فقط صفحات اطراف صفحه فعلی + اولین و آخرین صفحه نمایش داده شوند
     if (
       i === 1 ||
       i === totalPages ||
