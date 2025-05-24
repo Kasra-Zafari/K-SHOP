@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import Pagination from "@/components/Pagination";
+import InvalidPageMessage from "@/components/InvalidPageMessage";
 
 export const metadata = {
   title: "Products | K-SHOP",
@@ -18,12 +19,17 @@ async function getProducts(page) {
 export default async function ProductsPage({ params }) {
   const currentPage = parseInt(params.page, 10);
   const data = await getProducts(currentPage);
+  const totalPages = Math.ceil(data.total / 12);
+
+  if (currentPage > totalPages) {
+    return <InvalidPageMessage />;
+  }
+
   const products = data.products;
 
   return (
     <main className="p-4 md:p-6">
-      <h1 className="text-xl md:text-2xl font-bold text-[#002AB3] mb-6 text-start
-      ">
+      <h1 className="text-xl md:text-2xl font-bold text-[#002AB3] mb-6 text-start">
         Our Products
       </h1>
 
@@ -43,7 +49,7 @@ export default async function ProductsPage({ params }) {
                 priority={index === 0}
                 className="object-contain rounded-md"
               />
-              <h2 className="mt-3 text-center text-sm font-semibold text-[#002AB3]">
+              <h2 className="mt-3 text-center text-sm font-semibold text-[#002AB3] min-h-[4rem]">
                 {product.title}
               </h2>
               <p className="text-green-700 font-bold mt-1">${product.price}</p>
@@ -52,10 +58,7 @@ export default async function ProductsPage({ params }) {
         ))}
       </div>
 
-      <Pagination
-        currentPage={currentPage}
-        totalPages={Math.ceil(data.total / 12)}
-      />
+      <Pagination currentPage={currentPage} totalPages={totalPages} />
     </main>
   );
 }

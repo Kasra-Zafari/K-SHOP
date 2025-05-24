@@ -2,6 +2,7 @@ import ProductImage from "@/components/product/ProductImage";
 import ProductInfo from "@/components/product/ProductInfo";
 import AddToCartControls from "@/components/product/AddToCartControls";
 import ProductTabs from "@/components/product/ProductTabs";
+import InvalidProductMessage from "@/components/InvalidProductMessage";
 
 async function getProduct(id) {
   const res = await fetch(`https://dummyjson.com/products/${id}`);
@@ -26,8 +27,8 @@ export default async function ProductDetailsPage({ params }) {
   const product = await getProduct(params.id);
 
   if (!product) {
-    return <div className="p-4 text-red-500">Product not found.</div>;
-  }
+  return <InvalidProductMessage />;
+}
 
   return (
     <div className="p-4">
