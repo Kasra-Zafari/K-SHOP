@@ -2,6 +2,14 @@ import Header from '@/components/Header';
 import './globals.css';
 
 
+export const metadata = {
+  title: "K-SHOP",
+  description: "Your favorite online shop",
+  icons: {
+    icon: "/favicon.png",
+  },
+};
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
