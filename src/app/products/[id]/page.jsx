@@ -1,30 +1,29 @@
-import React from "react";
 import ProductImage from "@/components/product/ProductImage";
 import ProductInfo from "@/components/product/ProductInfo";
 import AddToCartControls from "@/components/product/AddToCartControls";
 import ProductTabs from "@/components/product/ProductTabs";
-import {products} from "@/data/products.json";
 
+async function getProduct(id) {
+  const res = await fetch(`https://dummyjson.com/products/${id}`);
+  if (!res.ok) return null;
+  return res.json();
+}
 
-const ProductDetailsPage = ({ params }) => {
-  const productId = params.id;
-  const product = products.find((p) => p.id.toString() === productId);
+export default async function ProductDetailsPage({ params }) {
+  const product = await getProduct(params.id);
 
-  return <ProductPage product={product} />;
-};
-const ProductPage = ({ product }) => {
   if (!product) {
     return <div className="p-4 text-red-500">Product not found.</div>;
   }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-4">
-      {/* image*/}
+      {/* image */}
       <div>
         <ProductImage images={product.images} title={product.title} />
       </div>
 
-      {/* add to cart*/}
+      {/* add to cart */}
       <div className="flex flex-col gap-4">
         <ProductInfo product={product} />
         <AddToCartControls product={product} />
@@ -36,6 +35,4 @@ const ProductPage = ({ product }) => {
       </div>
     </div>
   );
-};
-
-export default ProductDetailsPage;
+}
