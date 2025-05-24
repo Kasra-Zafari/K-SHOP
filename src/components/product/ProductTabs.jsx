@@ -15,7 +15,9 @@ const ProductTabs = ({ product }) => {
   return (
     <div>
       {/* Tab buttons */}
-      <div className="flex gap-2 border-b border-gray-200 mb-4">
+      <div className="flex gap-2 border-b border-gray-200 mb-4 overflow-x-auto whitespace-nowrap
+                      scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100
+                      -webkit-overflow-scrolling-touch">
         {tabs.map((tab) => (
           <button
             key={tab.key}

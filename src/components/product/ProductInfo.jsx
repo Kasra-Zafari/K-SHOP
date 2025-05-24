@@ -1,7 +1,7 @@
 import React from "react";
 
 const ProductInfo = ({ product }) => {
-  const { id, title, category, brand, price, stock, dimensions } = product;
+  const { sku, title, category, brand, price, stock, dimensions } = product;
 
   const formattedDimensions = dimensions
     ? `${dimensions.width} x ${dimensions.height} x ${dimensions.depth} cm`
@@ -10,7 +10,7 @@ const ProductInfo = ({ product }) => {
   return (
     <div className="w-full flex flex-col gap-2">
       <h1 className="text-2xl font-bold text-[#002AB3]">{title}</h1>
-      <p className="text-sm text-gray-500">Code: {id}</p>
+      <p className="text-sm text-gray-500">Code: {sku}</p>
       <p className="text-sm text-gray-500">Category: {category}</p>
       <p className="text-sm text-gray-500">Brand: {brand}</p>
       <p className="text-sm text-gray-500">Dimensions: {formattedDimensions}</p>
