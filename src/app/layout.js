@@ -6,11 +6,10 @@ export const metadata = {
   title: "K-SHOP",
   description: "Your favorite online shop",
   icons: {
-    icon: "/favicon.png",
-    shortcut: "/favicon.png",
-    apple: "/favicon.png",
+    icon: "/icon.ico",
   },
 };
+
 
 export default function RootLayout({ children }) {
   return (
