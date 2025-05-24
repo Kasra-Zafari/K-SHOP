@@ -9,7 +9,7 @@ export default function InvalidProductMessage() {
       <Ban className="w-12 h-12 text-red-500" />
       <h2 className="text-xl font-semibold">Product Not Found</h2>
       <p className="text-sm text-gray-500 max-w-xs">
-        The product you are looking for doesn’t exist or has been removed.
+        The product you are looking for doesn't exist or has been removed.
       </p>
       <Link
         href="/products/page/1"
