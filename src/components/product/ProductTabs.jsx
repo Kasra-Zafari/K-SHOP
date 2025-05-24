@@ -5,29 +5,39 @@ import React, { useState } from "react";
 const ProductTabs = ({ product }) => {
   const [activeTab, setActiveTab] = useState("description");
 
+  const tabs = [
+    { key: "description", label: "Description" },
+    { key: "features", label: "Features" },
+    { key: "reviews", label: "Reviews" },
+    { key: "tags", label: "Tags" },
+  ];
+
   return (
-    <div className="mt-8">
-      {/* tab btn*/}
-      <div className="flex gap-4 border-b border-gray-200">
-        {["description", "features", "reviews", "tags"].map((tab) => (
+    <div>
+      {/* Tab buttons */}
+      <div className="flex gap-2 border-b border-gray-200 mb-4">
+        {tabs.map((tab) => (
           <button
-            key={tab}
-            className={`pb-2 px-4 font-medium ${
-              activeTab === tab ? "border-b-2 border-black" : "text-gray-500"
-            }`}
-            onClick={() => setActiveTab(tab)}
+            key={tab.key}
+            onClick={() => setActiveTab(tab.key)}
+            className={`px-4 py-2 rounded-t-lg font-medium transition-all duration-200
+              ${
+                activeTab === tab.key
+                  ? "bg-[#002AB3]/10 text-[#002AB3] border-b-2 border-[#002AB3]"
+                  : "text-gray-500 hover:text-[#002AB3]"
+              }`}
           >
-            {tab.charAt(0).toUpperCase() + tab.slice(1)}
+            {tab.label}
           </button>
         ))}
       </div>
 
-      {/* Tab dscrp*/}
-      <div className="mt-4">
+      {/* Tab content */}
+      <div className="text-sm text-gray-700">
         {activeTab === "description" && <p>{product.description}</p>}
 
         {activeTab === "features" && (
-          <div className="text-sm text-gray-700 space-y-2">
+          <div className="space-y-2">
             <p>
               <strong>Warranty:</strong>{" "}
               {product.warrantyInformation || "Not available"}
@@ -35,6 +45,12 @@ const ProductTabs = ({ product }) => {
             <p>
               <strong>Shipping:</strong>{" "}
               {product.shippingInformation || "Standard shipping"}
+            </p>
+            <p>
+              <strong>Dimensions:</strong>{" "}
+              {product.dimensions
+                ? `${product.dimensions.width}×${product.dimensions.height}×${product.dimensions.depth}`
+                : "Not specified"}
             </p>
           </div>
         )}
@@ -56,7 +72,7 @@ const ProductTabs = ({ product }) => {
         )}
 
         {activeTab === "tags" && (
-          <div className="text-sm text-gray-600">
+          <div>
             {product.tags && product.tags.length > 0
               ? product.tags.join(", ")
               : "No tags available."}

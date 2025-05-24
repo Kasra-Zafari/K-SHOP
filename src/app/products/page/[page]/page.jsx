@@ -22,7 +22,8 @@ export default async function ProductsPage({ params }) {
 
   return (
     <main className="p-4 md:p-6">
-      <h1 className="text-xl md:text-2xl font-bold text-[#002AB3] mb-6 text-center">
+      <h1 className="text-xl md:text-2xl font-bold text-[#002AB3] mb-6 text-start
+      ">
         Our Products
       </h1>
 
@@ -33,7 +34,7 @@ export default async function ProductsPage({ params }) {
             href={`/products/${product.id}`}
             className="block w-full h-full"
           >
-            <div className="border rounded-lg p-3 md:p-4 flex flex-col items-center bg-white hover:shadow-md transition">
+            <div className="border border-[#002AB3] rounded-lg p-3 md:p-4 flex flex-col items-center bg-white hover:shadow-md hover:border-[#72b7f2] transition">
               <Image
                 src={product.thumbnail}
                 alt={product.title}

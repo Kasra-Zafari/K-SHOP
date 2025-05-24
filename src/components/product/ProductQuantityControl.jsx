@@ -12,7 +12,7 @@ const ProductQuantityControl = ({ product }) => {
         {cartItem.quantity > 1 ? (
           <button
             onClick={() => decreaseQuantity(product.id)}
-            className="w-8 h-8 bg-gray-200 text-lg rounded"
+            className="w-8 h-8 bg-[#f0f0f0] text-lg rounded hover:bg-[#ddd]"
           >
             -
           </button>
@@ -27,7 +27,7 @@ const ProductQuantityControl = ({ product }) => {
         <span className="text-lg">{cartItem.quantity}</span>
         <button
           onClick={() => increaseQuantity(product.id)}
-          className="w-8 h-8 bg-gray-200 text-lg rounded"
+          className="w-8 h-8 bg-[#f0f0f0] text-lg rounded hover:bg-[#ddd]"
         >
           +
         </button>
@@ -39,7 +39,7 @@ const ProductQuantityControl = ({ product }) => {
     <div className="mt-4">
       <button
         onClick={() => addToCart(product)}
-        className="bg-black text-white px-4 py-2 rounded"
+        className="bg-black hover:bg-gray-800 text-white px-4 py-2 rounded"
       >
         Add to Cart
       </button>

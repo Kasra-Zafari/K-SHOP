@@ -30,21 +30,25 @@ export default async function ProductDetailsPage({ params }) {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-4">
-      {/* image */}
-      <div>
-        <ProductImage images={product.images} title={product.title} />
-      </div>
+    <div className="p-4">
+      <div className="bg-white p-4 md:p-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* image box */}
+          <div className="border border-[#002AB3] rounded-xl p-4 flex items-center justify-center h-full">
+            <ProductImage images={product.images} title={product.title} />
+          </div>
 
-      {/* add to cart */}
-      <div className="flex flex-col gap-4">
-        <ProductInfo product={product} />
-        <AddToCartControls product={product} />
-      </div>
+          {/* info box */}
+          <div className="border border-[#002AB3] rounded-xl p-4 flex flex-col justify-between h-full">
+            <ProductInfo product={product} />
+            <AddToCartControls product={product} />
+          </div>
+        </div>
 
-      {/* tabs */}
-      <div className="col-span-1 md:col-span-2">
-        <ProductTabs product={product} />
+        {/* tabs box */}
+        <div className="mt-8 border border-[#002AB3] rounded-xl p-4">
+          <ProductTabs product={product} />
+        </div>
       </div>
     </div>
   );
