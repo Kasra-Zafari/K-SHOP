@@ -28,11 +28,12 @@ export default async function ProductsPage({ params }) {
 
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
         {products.map((product, index) => (
-          <Link href={`/products/${product.id}`} className="block w-full h-full">
-            <div
-              key={product.id}
-              className="border rounded-lg p-3 md:p-4 flex flex-col items-center bg-white hover:shadow-md transition"
-            >
+          <Link
+            key={product.id}
+            href={`/products/${product.id}`}
+            className="block w-full h-full"
+          >
+            <div className="border rounded-lg p-3 md:p-4 flex flex-col items-center bg-white hover:shadow-md transition">
               <Image
                 src={product.thumbnail}
                 alt={product.title}

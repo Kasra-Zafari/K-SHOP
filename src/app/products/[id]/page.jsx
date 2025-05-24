@@ -9,6 +9,19 @@ async function getProduct(id) {
   return res.json();
 }
 
+export async function generateMetadata({ params }) {
+  const product = await getProduct(params.id);
+  if (!product) {
+    return {
+      title: "Product Not Found | K-SHOP",
+    };
+  }
+  return {
+    title: `${product.title} | K-SHOP`,
+    description: product.description,
+  };
+}
+
 export default async function ProductDetailsPage({ params }) {
   const product = await getProduct(params.id);
 
