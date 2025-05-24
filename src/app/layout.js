@@ -7,6 +7,8 @@ export const metadata = {
   description: "Your favorite online shop",
   icons: {
     icon: "/favicon.png",
+    shortcut: "/favicon.png",
+    apple: "/favicon.png",
   },
 };
 
