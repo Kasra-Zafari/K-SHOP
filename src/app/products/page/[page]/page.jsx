@@ -50,13 +50,15 @@ export default async function ProductsPage({ params, searchParams }) {
 
   // Show message if no products found
   if (total === 0) {
-    return (
-      <main className="p-4 md:p-6 text-center text-[#002AB3]">
-        <p>No products found matching your search.</p>
-        <SearchClientWrapper />
-      </main>
-    );
-  }
+  return (
+    <main className="p-4 md:p-6">
+      <SearchClientWrapper />
+      <p className="mt-6 text-center text-[#002AB3] text-base md:text-lg font-medium">
+        No products found matching your search.
+      </p>
+    </main>
+  );
+}
 
   return (
     <main className="p-4 md:p-6">

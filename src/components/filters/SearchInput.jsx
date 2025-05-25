@@ -48,7 +48,7 @@ export default function SearchInput() {
       value={inputValue}
       onChange={(e) => setInputValue(e.target.value)}
       placeholder="Search in products..."
-      className="w-full border px-4 py-2 rounded text-sm"
+      className="w-2/5 mx-auto my-4 border border-[#002AB3] px-4 py-2 rounded text-sm text-[#002AB3] placeholder:text-[#72B7F2] focus:outline-none focus:ring-2 focus:ring-[#72B7F2]"
     />
   );
 }
