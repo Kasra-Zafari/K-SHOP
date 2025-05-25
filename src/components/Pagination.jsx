@@ -16,22 +16,22 @@ export default function Pagination({ currentPage, totalPages }) {
   };
 
   const getPagesToShow = () => {
-  const pages = [];
+    const pages = [];
 
-  for (let i = 1; i <= totalPages; i++) {
-    if (
-      i === 1 ||
-      i === totalPages ||
-      (i >= currentPage - 1 && i <= currentPage + 1)
-    ) {
-      pages.push(i);
-    } else if (pages[pages.length - 1] !== "...") {
-      pages.push("...");
+    for (let i = 1; i <= totalPages; i++) {
+      if (
+        i === 1 ||
+        i === totalPages ||
+        (i >= currentPage - 1 && i <= currentPage + 1)
+      ) {
+        pages.push(i);
+      } else if (pages[pages.length - 1] !== "...") {
+        pages.push("...");
+      }
     }
-  }
 
-  return pages;
-};
+    return pages;
+  };
 
   const pagesToShow = getPagesToShow();
 
@@ -41,7 +41,7 @@ export default function Pagination({ currentPage, totalPages }) {
       {currentPage > 1 && (
         <Link
           href={getPageLink(currentPage - 1)}
-          className="px-2 py-1 rounded border text-[#002AB3] hover:bg-[#72B7F2] hover:text-white transition whitespace-nowrap"
+          className="px-2 py-1 rounded border text-[#002AB3] hover:bg-[#72B7F2] hover:text-white transition whitespace-nowrap sm:px-3 sm:py-2 sm:text-sm"
         >
           Previous
         </Link>
@@ -50,10 +50,7 @@ export default function Pagination({ currentPage, totalPages }) {
       {/* Pages */}
       {pagesToShow.map((page, index) =>
         page === "..." ? (
-          <span
-            key={`dots-${index}`}
-            className="px-1 py-1 text-gray-500"
-          >
+          <span key={`dots-${index}`} className="px-1 py-1 text-gray-500">
             ...
           </span>
         ) : (
@@ -61,7 +58,9 @@ export default function Pagination({ currentPage, totalPages }) {
             key={`page-${page}`}
             href={getPageLink(page)}
             className={clsx(
-              "px-2 py-1 rounded border text-center min-w-[28px]",
+              "rounded border text-center min-w-[28px]",
+              "px-2 py-1 text-xs",
+              "sm:px-3 sm:py-2 sm:text-sm",
               page === currentPage
                 ? "bg-[#002AB3] text-white"
                 : "text-[#002AB3] hover:bg-[#72B7F2] hover:text-white transition"
@@ -76,7 +75,7 @@ export default function Pagination({ currentPage, totalPages }) {
       {currentPage < totalPages && (
         <Link
           href={getPageLink(currentPage + 1)}
-          className="px-2 py-1 rounded border text-[#002AB3] hover:bg-[#72B7F2] hover:text-white transition whitespace-nowrap"
+          className="px-2 py-1 rounded border text-[#002AB3] hover:bg-[#72B7F2] hover:text-white transition whitespace-nowrap sm:px-3 sm:py-2 sm:text-sm"
         >
           Next
         </Link>

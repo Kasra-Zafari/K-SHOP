@@ -22,15 +22,17 @@ const ProductTabs = ({ product }) => {
           <button
             key={tab.key}
             onClick={() => setActiveTab(tab.key)}
-            className={`px-4 py-2 rounded-t-lg font-medium transition-all duration-200
-              ${
-                activeTab === tab.key
-                  ? "bg-[#002AB3]/10 text-[#002AB3] border-b-2 border-[#002AB3]"
-                  : "text-gray-500 hover:text-[#002AB3]"
+            className={`rounded-t-lg font-medium transition-all duration-200
+    px-2 py-1 text-xs
+    sm:px-4 sm:py-2 sm:text-base
+    ${activeTab === tab.key
+                ? "bg-[#002AB3]/10 text-[#002AB3] border-b-2 border-[#002AB3]"
+                : "text-gray-500 hover:text-[#002AB3]"
               }`}
           >
             {tab.label}
           </button>
+
         ))}
       </div>
 
