@@ -48,6 +48,8 @@ export default async function ProductsPage({ params }) {
                 height={200}
                 priority={index === 0}
                 className="object-contain rounded-md"
+                placeholder="blur"
+                blurDataURL="/images/blur-placeholder.png"
               />
               <h2 className="mt-3 text-center text-sm font-semibold text-[#002AB3] min-h-[4rem]">
                 {product.title}
