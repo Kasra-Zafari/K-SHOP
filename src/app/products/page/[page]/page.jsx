@@ -45,37 +45,40 @@ export default async function ProductsPage({ params, searchParams }) {
 
   // Redirect if page number is invalid
   if (page < 1 || (totalPages > 0 && page > totalPages)) {
-  const validPage = Math.min(Math.max(page, 1), totalPages || 1);
-  const redirectUrl = search
-    ? `/products/page/${validPage}?search=${encodeURIComponent(search)}`
-    : `/products/page/${validPage}`;
-  redirect(redirectUrl);
-}
+    const validPage = Math.min(Math.max(page, 1), totalPages || 1);
+    const redirectUrl = search
+      ? `/products/page/${validPage}?search=${encodeURIComponent(search)}`
+      : `/products/page/${validPage}`;
+    redirect(redirectUrl);
+  }
 
 
   // Show message if no products found
   if (total === 0) {
+    return (
+      <main className="min-h-screen flex flex-col p-4 md:p-6">
+        <h1 className="text-xl md:text-2xl font-bold text-[#002AB3] mb-6 text-start">
+          Our Products
+        </h1>
+        <SearchClientWrapper />
+        <div className="flex-grow flex items-center justify-center">
+          <p className="text-center text-[#002AB3] text-base md:text-lg font-medium">
+            No products found matching your search.
+          </p>
+        </div>
+      </main>
+    );
+  }
+
   return (
-    <main className="p-4 md:p-6">
+    <main className="min-h-screen flex flex-col p-4 md:p-6">
       <h1 className="text-xl md:text-2xl font-bold text-[#002AB3] mb-6 text-start">
         Our Products
       </h1>
       <SearchClientWrapper />
-      <p className="mt-6 text-center text-[#002AB3] text-base md:text-lg font-medium">
-        No products found matching your search.
-      </p>
-    </main>
-  );
-}
-
-  return (
-    <main className="p-4 md:p-6">
-      <h1 className="text-xl md:text-2xl font-bold text-[#002AB3] mb-6 text-start">
-        Our Products
-      </h1>
-
-      <SearchClientWrapper />
-      <ProductGrid products={products} />
+      <div className="flex-grow">
+        <ProductGrid products={products} />
+      </div>
       <Pagination currentPage={page} totalPages={totalPages} />
     </main>
   );
