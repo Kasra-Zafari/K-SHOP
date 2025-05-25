@@ -1,13 +1,23 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import clsx from "clsx";
 
 export default function Pagination({ currentPage, totalPages }) {
   const pathname = usePathname();
-  const getPageLink = (page) => `/products/page/${page}`;
+  const searchParams = useSearchParams();
 
+  // Get the current search query if it exists
+  const search = searchParams.get("search");
+
+  // Generate the correct page link, preserving the search query if present
+  const getPageLink = (page) => {
+    const base = `/products/page/${page}`;
+    return search ? `${base}?search=${encodeURIComponent(search)}` : base;
+  };
+
+  // Create an array of page numbers to display, including "..." where appropriate
   const pagesToShow = [];
   for (let i = 1; i <= totalPages; i++) {
     if (
@@ -23,7 +33,7 @@ export default function Pagination({ currentPage, totalPages }) {
 
   return (
     <div className="flex justify-center mt-6 gap-2 flex-wrap text-sm font-medium">
-      {/* Previous */}
+      {/* Previous Page Button */}
       {currentPage > 1 && (
         <Link
           href={getPageLink(currentPage - 1)}
@@ -33,7 +43,7 @@ export default function Pagination({ currentPage, totalPages }) {
         </Link>
       )}
 
-      {/* Page Numbers */}
+      {/* Page Number Buttons */}
       {pagesToShow.map((page, index) =>
         page === "..." ? (
           <span key={`dots-${index}`} className="px-2 py-1 text-gray-500">
@@ -55,7 +65,7 @@ export default function Pagination({ currentPage, totalPages }) {
         )
       )}
 
-      {/* Next */}
+      {/* Next Page Button */}
       {currentPage < totalPages && (
         <Link
           href={getPageLink(currentPage + 1)}

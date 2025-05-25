@@ -45,8 +45,13 @@ export default async function ProductsPage({ params, searchParams }) {
 
   // Redirect if page number is invalid
   if (page < 1 || (totalPages > 0 && page > totalPages)) {
-    redirect(`/products/page/${Math.min(Math.max(page, 1), totalPages || 1)}`);
-  }
+  const validPage = Math.min(Math.max(page, 1), totalPages || 1);
+  const redirectUrl = search
+    ? `/products/page/${validPage}?search=${encodeURIComponent(search)}`
+    : `/products/page/${validPage}`;
+  redirect(redirectUrl);
+}
+
 
   // Show message if no products found
   if (total === 0) {
