@@ -54,8 +54,9 @@ export default function SearchInput() {
         onChange={(e) => setInputValue(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder="Search in products..."
-        className="w-full border border-[#002AB3] focus:border-[#72B7F2] focus:outline-none text-[#002AB3] placeholder-[#72B7F2] px-4 py-2 rounded text-sm pr-10"
+        className="w-full border border-[#002AB3] focus:border-[#72B7F2] focus:outline-none text-[#002AB3] placeholder-[#72B7F2] px-4 py-2 rounded text-base pr-10"
       />
+
 
       {hasSearched && inputValue.length > 0 ? (
         <button
