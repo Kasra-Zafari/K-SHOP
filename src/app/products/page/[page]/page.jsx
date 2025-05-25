@@ -1,31 +1,62 @@
-import Link from "next/link";
-import Image from "next/image";
+import ProductGrid from "@/components/ProductGrid";
 import Pagination from "@/components/Pagination";
-import InvalidPageMessage from "@/components/InvalidPageMessage";
+import SearchClientWrapper from "@/components/SearchClientWrapper";
+import { redirect } from "next/navigation";
 
 export const metadata = {
   title: "Products | K-SHOP",
   description: "Browse the latest products available on K-SHOP.",
 };
 
-async function getProducts(page) {
+export default async function ProductsPage({ params, searchParams }) {
+  const page = +params.page || 1;
+  const search = searchParams?.search?.trim().toLowerCase() || "";
+
   const limit = 12;
   const skip = (page - 1) * limit;
-  const res = await fetch(`https://dummyjson.com/products?limit=${limit}&skip=${skip}`);
-  const data = await res.json();
-  return data;
-}
 
-export default async function ProductsPage({ params }) {
-  const currentPage = parseInt(params.page, 10);
-  const data = await getProducts(currentPage);
-  const totalPages = Math.ceil(data.total / 12);
+  let products = [];
+  let total = 0;
 
-  if (currentPage > totalPages) {
-    return <InvalidPageMessage />;
+  // If there's a search query (at least 2 characters)
+  if (search.length >= 2) {
+    const res = await fetch("https://dummyjson.com/products?limit=194");
+    const data = await res.json();
+
+    // Filter products by title based on the search query
+    const filtered = data.products.filter((product) =>
+      product.title.toLowerCase().includes(search)
+    );
+
+    total = filtered.length;
+    products = filtered.slice(skip, skip + limit);
+  } else {
+    // Regular fetch when there's no search query
+    const res = await fetch(
+      `https://dummyjson.com/products?limit=${limit}&skip=${skip}`
+    );
+    const data = await res.json();
+
+    products = data.products;
+    total = data.total;
   }
 
-  const products = data.products;
+  const totalPages = Math.ceil(total / limit);
+
+  // Redirect if page number is invalid
+  if (page < 1 || (totalPages > 0 && page > totalPages)) {
+    redirect(`/products/page/${Math.min(Math.max(page, 1), totalPages || 1)}`);
+  }
+
+  // Show message if no products found
+  if (total === 0) {
+    return (
+      <main className="p-4 md:p-6 text-center text-[#002AB3]">
+        <p>No products found matching your search.</p>
+        <SearchClientWrapper />
+      </main>
+    );
+  }
 
   return (
     <main className="p-4 md:p-6">
@@ -33,34 +64,9 @@ export default async function ProductsPage({ params }) {
         Our Products
       </h1>
 
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
-        {products.map((product, index) => (
-          <Link
-            key={product.id}
-            href={`/products/${product.id}`}
-            className="block w-full h-full"
-          >
-            <div className="border border-[#002AB3] rounded-lg p-3 md:p-4 flex flex-col items-center bg-white hover:shadow-md hover:border-[#72b7f2] transition">
-              <Image
-                src={product.thumbnail}
-                alt={product.title}
-                width={200}
-                height={200}
-                priority={index === 0}
-                className="object-contain rounded-md"
-                placeholder="blur"
-                blurDataURL="/images/blur-placeholder.png"
-              />
-              <h2 className="mt-3 text-center text-sm font-semibold text-[#002AB3] min-h-[4rem]">
-                {product.title}
-              </h2>
-              <p className="text-green-700 font-bold mt-1">${product.price}</p>
-            </div>
-          </Link>
-        ))}
-      </div>
-
-      <Pagination currentPage={currentPage} totalPages={totalPages} />
+      <SearchClientWrapper />
+      <ProductGrid products={products} />
+      <Pagination currentPage={page} totalPages={totalPages} />
     </main>
   );
 }
