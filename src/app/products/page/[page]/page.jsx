@@ -57,6 +57,9 @@ export default async function ProductsPage({ params, searchParams }) {
   if (total === 0) {
   return (
     <main className="p-4 md:p-6">
+      <h1 className="text-xl md:text-2xl font-bold text-[#002AB3] mb-6 text-start">
+        Our Products
+      </h1>
       <SearchClientWrapper />
       <p className="mt-6 text-center text-[#002AB3] text-base md:text-lg font-medium">
         No products found matching your search.
