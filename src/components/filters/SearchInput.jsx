@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { X, Search } from "lucide-react";
 
 export default function SearchInput() {
@@ -35,6 +35,10 @@ export default function SearchInput() {
     if (e.key === "Enter") {
       e.preventDefault();
       doSearch(inputValue);
+    } else if (e.key === "Backspace") {
+      if (inputValue.length === 1) {
+        handleClear();
+      }
     }
   };
 
@@ -56,7 +60,6 @@ export default function SearchInput() {
         placeholder="Search in products..."
         className="w-full border border-[#002AB3] focus:border-[#72B7F2] focus:outline-none text-[#002AB3] placeholder-[#72B7F2] px-4 py-2 rounded text-base pr-10"
       />
-
 
       {hasSearched && inputValue.length > 0 ? (
         <button
