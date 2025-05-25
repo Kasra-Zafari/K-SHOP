@@ -2,6 +2,7 @@
 
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
+import { X } from "lucide-react"; // اضافه کن برای آیکون ضربدر
 
 export default function SearchInput() {
   const searchParams = useSearchParams();
@@ -13,7 +14,6 @@ export default function SearchInput() {
 
   const firstRender = useRef(true);
 
-  // Sync input with URL when default search param changes
   useEffect(() => {
     setInputValue(defaultSearch);
   }, [defaultSearch]);
@@ -24,7 +24,6 @@ export default function SearchInput() {
       return;
     }
 
-    // Only push if input value has actually changed
     if (inputValue === defaultSearch) return;
 
     const timeout = setTimeout(() => {
@@ -42,13 +41,31 @@ export default function SearchInput() {
     return () => clearTimeout(timeout);
   }, [inputValue]);
 
+  const handleClear = () => {
+    setInputValue("");
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("search");
+    router.push(`/products/page/1?${params.toString()}`);
+  };
+
   return (
+  <div className="relative w-full md:w-[40%] mx-auto my-4">
     <input
       type="text"
       value={inputValue}
       onChange={(e) => setInputValue(e.target.value)}
       placeholder="Search in products..."
-      className="w-2/5 mx-auto my-4 border border-[#002AB3] px-4 py-2 rounded text-sm text-[#002AB3] placeholder:text-[#72B7F2] focus:outline-none focus:ring-2 focus:ring-[#72B7F2]"
+      className="w-full border border-[#002AB3] text-[#002AB3] placeholder-[#6c7ae0] px-4 py-2 rounded text-sm pr-10"
     />
-  );
+    {inputValue.length > 0 && (
+      <button
+        onClick={handleClear}
+        className="absolute right-3 top-1/2 -translate-y-1/2 text-[#002AB3] hover:text-red-500"
+        aria-label="Clear search input"
+      >
+        <X size={18} />
+      </button>
+    )}
+  </div>
+);
 }
