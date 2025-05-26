@@ -1,18 +1,24 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import clsx from "clsx";
 
 export default function Pagination({ currentPage, totalPages }) {
-  const pathname = usePathname();
   const searchParams = useSearchParams();
 
   const search = searchParams.get("search");
+  const sort = searchParams.get("sort");
 
   const getPageLink = (page) => {
     const base = `/products/page/${page}`;
-    return search ? `${base}?search=${encodeURIComponent(search)}` : base;
+    const query = new URLSearchParams();
+
+    if (search) query.set("search", search);
+    if (sort) query.set("sort", sort);
+
+    const queryString = query.toString();
+    return queryString ? `${base}?${queryString}` : base;
   };
 
   const getPagesToShow = () => {
