@@ -31,7 +31,7 @@ export default async function ProductsPage({ params, searchParams }) {
     const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
     const baseUrl = `${protocol}://${host}`;
 
-    const res = await fetch(`${baseUrl}/api/products`, {
+    const res = await fetch(`${headers().get("x-forwarded-proto") || "https"}://${headers().get("host")}/api/products`, {
       cache: "no-store",
     });
 
