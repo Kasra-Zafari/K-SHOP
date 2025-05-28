@@ -40,5 +40,4 @@ export default function ProductSort() {
             </select>
         </div>
     );
-
 }

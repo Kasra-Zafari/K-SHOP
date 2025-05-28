@@ -1,16 +1,15 @@
-// import productsData from '@/data/products.json';
+import { promises as fs } from "fs";
+import path from "path";
 
-// export async function GET(request) {
-//   const { searchParams } = new URL(request.url);
-//   const page = parseInt(searchParams.get("page")) || 1;
-//   const limit = parseInt(searchParams.get("limit")) || 12;
+export async function GET() {
+  try {
+    const filePath = path.join(process.cwd(), "db.json");
+    const fileData = await fs.readFile(filePath, "utf8");
+    const data = JSON.parse(fileData);
 
-//   const start = (page - 1) * limit;
-//   const end = start + limit;
-//   const paginated = productsData.products.slice(start, end);
-
-//   return Response.json({
-//     products: paginated,
-//     total: productsData.products.length,
-//   });
-// }
+    return Response.json(data);
+  } catch (error) {
+    console.error("Failed to read local db.json:", error.message);
+    return new Response("Internal server error", { status: 500 });
+  }
+}
