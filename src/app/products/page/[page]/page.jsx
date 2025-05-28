@@ -25,7 +25,9 @@ export default async function ProductsPage({ params, searchParams }) {
   let data = null;
 
   try {
-    const host = headers().get("host");
+    // ✅ دریافت host و protocol به صورت داینامیک
+    const headersList = headers();
+    const host = headersList.get("host");
     const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
     const baseUrl = `${protocol}://${host}`;
 
@@ -49,47 +51,11 @@ export default async function ProductsPage({ params, searchParams }) {
     );
   }
 
-  // const selectedCategories = searchParams?.category?.split(",") || [];
-  // const selectedBrands = searchParams?.brand?.split(",") || [];
-  // const minPrice = parseFloat(searchParams?.minPrice || "0");
-  // const maxPrice = parseFloat(searchParams?.maxPrice || "1000000");
-  // const inStockOnly = searchParams?.inStock === "1";
-  // const discountOnly = searchParams?.discounted === "1";
-  // const minRating = parseFloat(searchParams?.rating || 0);
-
   if (search.length >= 2) {
     allProducts = allProducts.filter((product) =>
       product.title.toLowerCase().includes(search)
     );
   }
-
-  // if (selectedCategories.length) {
-  //   allProducts = allProducts.filter((p) =>
-  //     selectedCategories.includes(p.category)
-  //   );
-  // }
-
-  // if (selectedBrands.length) {
-  //   allProducts = allProducts.filter((p) =>
-  //     selectedBrands.includes(p.brand)
-  //   );
-  // }
-
-  // allProducts = allProducts.filter(
-  //   (p) => p.price >= minPrice && p.price <= maxPrice
-  // );
-
-  // if (inStockOnly) {
-  //   allProducts = allProducts.filter((p) => p.stock > 0);
-  // }
-
-  // if (discountOnly) {
-  //   allProducts = allProducts.filter((p) => p.discountPercentage > 0);
-  // }
-
-  // if (minRating > 0) {
-  //   allProducts = allProducts.filter((p) => p.rating >= minRating);
-  // }
 
   if (sort === "new") {
     allProducts.sort((a, b) => b.id - a.id);
@@ -111,11 +77,12 @@ export default async function ProductsPage({ params, searchParams }) {
     const params = new URLSearchParams();
     if (search) params.set("search", search);
     if (sort !== "default") params.set("sort", sort);
-    if (selectedCategories.length) params.set("category", selectedCategories.join(","));
-    if (selectedBrands.length) params.set("brand", selectedBrands.join(","));
-    if (inStockOnly) params.set("inStock", "1");
-    if (discountOnly) params.set("discounted", "1");
-    if (minRating > 0) params.set("rating", minRating.toString());
+    // اگر فیلترها رو فعال کردی، این بخش رو هم برگردون
+    // if (selectedCategories.length) params.set("category", selectedCategories.join(","));
+    // if (selectedBrands.length) params.set("brand", selectedBrands.join(","));
+    // if (inStockOnly) params.set("inStock", "1");
+    // if (discountOnly) params.set("discounted", "1");
+    // if (minRating > 0) params.set("rating", minRating.toString());
 
     redirect(`/products/page/${validPage}?${params.toString()}`);
   }
