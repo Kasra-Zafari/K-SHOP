@@ -18,7 +18,6 @@ export default async function ProductsPage({ params, searchParams }) {
   const search = searchParams?.search?.trim().toLowerCase() || "";
   const sort = searchParams?.sort || "default";
 
-  // دریافت پارامترهای فیلتر
   const selectedCategories = searchParams?.category?.split(",") || [];
   const selectedBrands = searchParams?.brand?.split(",") || [];
   const selectedPriceRanges = searchParams?.price?.split(",") || [];
@@ -47,7 +46,7 @@ export default async function ProductsPage({ params, searchParams }) {
     data = await res.json();
     allProducts = data.products;
   } catch (error) {
-    console.error("Error fetching products:", error.message);
+    console.error("❌ Error fetching products:", error.message);
 
     return (
       <main className="min-h-screen flex items-center justify-center p-4">
@@ -58,25 +57,28 @@ export default async function ProductsPage({ params, searchParams }) {
     );
   }
 
-  // اعمال فیلترها
+  // فیلتر جستجو
   if (search.length >= 2) {
     allProducts = allProducts.filter((product) =>
       product.title.toLowerCase().includes(search)
     );
   }
 
+  // فیلتر دسته‌بندی
   if (selectedCategories.length) {
     allProducts = allProducts.filter((p) =>
       selectedCategories.includes(p.category)
     );
   }
 
+  // فیلتر برند
   if (selectedBrands.length) {
     allProducts = allProducts.filter((p) =>
       selectedBrands.includes(p.brand)
     );
   }
 
+  // فیلتر قیمت
   if (selectedPriceRanges.length) {
     allProducts = allProducts.filter((p) => {
       return selectedPriceRanges.some((range) => {
@@ -86,19 +88,22 @@ export default async function ProductsPage({ params, searchParams }) {
     });
   }
 
+  // فیلتر امتیاز
   if (minRating > 0) {
     allProducts = allProducts.filter((p) => Math.floor(p.rating) >= minRating);
   }
 
+  // فیلتر موجودی
   if (inStockOnly) {
     allProducts = allProducts.filter((p) => p.stock > 0);
   }
 
+  // فیلتر تخفیف
   if (discountOnly) {
     allProducts = allProducts.filter((p) => p.discountPercentage > 0);
   }
 
-  // اعمال مرتب‌سازی
+  // مرتب‌سازی
   if (sort === "new") {
     allProducts.sort((a, b) => b.id - a.id);
   } else if (sort === "price-low") {
@@ -114,7 +119,7 @@ export default async function ProductsPage({ params, searchParams }) {
   const total = allProducts.length;
   const totalPages = Math.ceil(total / limit);
 
-  // بررسی اعتبار صفحه
+  // اگر شماره صفحه معتبر نیست، ریدایرکت کن
   if (page < 1 || (totalPages > 0 && page > totalPages)) {
     const validPage = Math.min(Math.max(page, 1), totalPages || 1);
     const params = new URLSearchParams();
