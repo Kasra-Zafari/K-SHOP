@@ -1,66 +1,26 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
-import ReactSlider from "react-slider";
 
 export default function ProductFilters({ categories, brands }) {
     const router = useRouter();
+    const pathname = usePathname();
     const searchParams = useSearchParams();
 
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [selectedBrands, setSelectedBrands] = useState([]);
+    const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
     const [minRating, setMinRating] = useState("");
-    const [priceRange, setPriceRange] = useState([0, 1000]);
     const [inStockOnly, setInStockOnly] = useState(false);
     const [discountOnly, setDiscountOnly] = useState(false);
 
-    useEffect(() => {
-        const params = new URLSearchParams(searchParams.toString());
-
-        if (selectedCategories.length) {
-            params.set("category", selectedCategories.join(","));
-        } else {
-            params.delete("category");
-        }
-
-        if (selectedBrands.length) {
-            params.set("brand", selectedBrands.join(","));
-        } else {
-            params.delete("brand");
-        }
-
-        if (inStockOnly) {
-            params.set("inStock", "1");
-        } else {
-            params.delete("inStock");
-        }
-
-        if (discountOnly) {
-            params.set("discounted", "1");
-        } else {
-            params.delete("discounted");
-        }
-
-        if (minRating) {
-            params.set("rating", minRating);
-        } else {
-            params.delete("rating");
-        }
-
-        params.set("minPrice", priceRange[0]);
-        params.set("maxPrice", priceRange[1]);
-
-        router.push(`/products/page/1?${params.toString()}`);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [
-        selectedCategories,
-        selectedBrands,
-        inStockOnly,
-        discountOnly,
-        minRating,
-        priceRange,
-    ]);
+    const priceRanges = [
+        { label: "$0 - $5000", value: "0-5000" },
+        { label: "$5000 - $15000", value: "5000-15000" },
+        { label: "$15000 - $30000", value: "15000-30000" },
+        { label: "$30000 - $40000", value: "30000-40000" },
+    ];
 
     const toggleInArray = (value, array, setArray) => {
         setArray(
@@ -70,103 +30,155 @@ export default function ProductFilters({ categories, brands }) {
         );
     };
 
-    const handlePriceChange = (values) => {
-        setPriceRange(values);
-    };
+    // خواندن فیلترها از URL هنگام لود
+    useEffect(() => {
+        const categoriesFromURL = searchParams.get("category")?.split(",") || [];
+        const brandsFromURL = searchParams.get("brand")?.split(",") || [];
+        const pricesFromURL = searchParams.get("price")?.split(",") || [];
+        const ratingFromURL = searchParams.get("rating") || "";
+        const inStock = searchParams.get("inStock") === "1";
+        const discounted = searchParams.get("discounted") === "1";
 
+        setSelectedCategories(categoriesFromURL);
+        setSelectedBrands(brandsFromURL);
+        setSelectedPriceRanges(pricesFromURL);
+        setMinRating(ratingFromURL);
+        setInStockOnly(inStock);
+        setDiscountOnly(discounted);
+    }, []);
 
+    // بروزرسانی URL هنگام تغییر فیلترها
+    useEffect(() => {
+        const params = new URLSearchParams();
+
+        if (selectedCategories.length) {
+            params.set("category", selectedCategories.join(","));
+        }
+
+        if (selectedBrands.length) {
+            params.set("brand", selectedBrands.join(","));
+        }
+
+        if (selectedPriceRanges.length) {
+            params.set("price", selectedPriceRanges.join(","));
+        }
+
+        if (inStockOnly) {
+            params.set("inStock", "1");
+        }
+
+        if (discountOnly) {
+            params.set("discounted", "1");
+        }
+
+        if (minRating) {
+            params.set("rating", minRating);
+        }
+
+        router.push(`${pathname}?${params.toString()}`);
+    }, [
+        selectedCategories,
+        selectedBrands,
+        selectedPriceRanges,
+        minRating,
+        inStockOnly,
+        discountOnly,
+    ]);
 
     return (
-        <aside className="w-full md:w-64 p-4 border rounded-xl bg-white shadow-sm mb-6 md:mb-0">
-            <h2 className="text-lg font-semibold mb-4 text-[#002AB3]">Filters</h2>
-
-            {/* Category Filter */}
-            <div className="mb-4">
-                <p className="font-medium text-sm mb-2 text-[#002AB3]">Category</p>
-                {categories.map((cat) => (
-                    <label
-                        key={cat}
-                        className="flex items-center mb-1 cursor-pointer hover:text-[#72B7F2]"
-                    >
+        <aside className="w-full md:w-64 border rounded p-4 space-y-6 text-sm text-[#002AB3]">
+            {/* دسته‌بندی */}
+            <div>
+                <h3 className="font-semibold mb-2">Category</h3>
+                {categories.map((category) => (
+                    <label key={category} className="flex items-center mb-1">
                         <input
                             type="checkbox"
-                            checked={selectedCategories.includes(cat)}
+                            checked={selectedCategories.includes(category)}
                             onChange={() =>
-                                toggleInArray(cat, selectedCategories, setSelectedCategories)
+                                toggleInArray(category, selectedCategories, setSelectedCategories)
                             }
-                            className="mr-2 accent-[#002AB3]"
+                            className="mr-2"
                         />
-                        <span className="text-sm">{cat}</span>
+                        {category}
                     </label>
                 ))}
             </div>
 
-            {/* Brand Filter */}
-            <div className="mb-4">
-                <p className="font-medium text-sm mb-2 text-[#002AB3]">Brand</p>
+            {/* برند */}
+            <div>
+                <h3 className="font-semibold mb-2">Brand</h3>
                 {brands.map((brand) => (
-                    <label
-                        key={brand}
-                        className="flex items-center mb-1 cursor-pointer hover:text-[#72B7F2]"
-                    >
+                    <label key={brand} className="flex items-center mb-1">
                         <input
                             type="checkbox"
                             checked={selectedBrands.includes(brand)}
                             onChange={() =>
                                 toggleInArray(brand, selectedBrands, setSelectedBrands)
                             }
-                            className="mr-2 accent-[#002AB3]"
+                            className="mr-2"
                         />
-                        <span className="text-sm">{brand}</span>
+                        {brand}
                     </label>
                 ))}
             </div>
 
-            {/* Price Range */}
-            {/* Price Range */}
-<div className="mb-4">
-  <p className="font-medium text-sm mb-2 text-[#002AB3]">Price Range</p>
-
-  <ReactSlider
-    className="w-full h-2 bg-gray-300 rounded-full"
-    thumbClassName="w-5 h-5 bg-[#002AB3] rounded-full cursor-pointer"
-    trackClassName="h-2 bg-[#002AB3]"
-    min={0}
-    max={1000}
-    step={10}
-    value={priceRange}
-    onChange={handlePriceChange}
-    pearling
-    minDistance={20}
-  />
-
-  <div className="flex justify-between text-sm mt-2">
-    <span>${priceRange[0]}</span>
-    <span>${priceRange[1]}</span>
-  </div>
-</div>
-
-
-
-            {/* Rating Filter */}
-            <div className="mb-4">
-                <p className="font-medium text-sm mb-2 text-[#002AB3]">Minimum Rating</p>
-                {[5, 4, 3].map((r) => (
-                    <label
-                        key={r}
-                        className="flex items-center mb-1 cursor-pointer hover:text-[#72B7F2]"
-                    >
+            {/* محدوده قیمت */}
+            <div>
+                <h3 className="font-semibold mb-2">Price Range</h3>
+                {priceRanges.map((range) => (
+                    <label key={range.value} className="flex items-center mb-1">
                         <input
-                            type="radio"
-                            name="rating"
-                            value={r}
-                            checked={minRating === r.toString()}
-                            onChange={() => setMinRating(r.toString())}
-                            className="mr-2 accent-[#002AB3]"
+                            type="checkbox"
+                            checked={selectedPriceRanges.includes(range.value)}
+                            onChange={() =>
+                                toggleInArray(range.value, selectedPriceRanges, setSelectedPriceRanges)
+                            }
+                            className="mr-2"
                         />
-                        <span className="text-sm">{r} stars & up</span>
+                        {range.label}
                     </label>
                 ))}
+            </div>
+
+            {/* امتیاز */}
+            <div>
+                <h3 className="font-semibold mb-2">Minimum Rating</h3>
+                <select
+                    value={minRating}
+                    onChange={(e) => setMinRating(e.target.value)}
+                    className="border rounded px-2 py-1 text-[#002AB3] w-full"
+                >
+                    <option value="">Any</option>
+                    {[5, 4, 3, 2, 1].map((r) => (
+                        <option key={r} value={r}>
+                            {r} stars & up
+                        </option>
+                    ))}
+                </select>
+            </div>
+
+            {/* موجودی و تخفیف */}
+            <div className="space-y-2">
+                <label className="flex items-center">
+                    <input
+                        type="checkbox"
+                        checked={inStockOnly}
+                        onChange={() => setInStockOnly(!inStockOnly)}
+                        className="mr-2"
+                    />
+                    In Stock Only
+                </label>
+
+                <label className="flex items-center">
+                    <input
+                        type="checkbox"
+                        checked={discountOnly}
+                        onChange={() => setDiscountOnly(!discountOnly)}
+                        className="mr-2"
+                    />
+                    Discounted Only
+                </label>
             </div>
         </aside>
     );

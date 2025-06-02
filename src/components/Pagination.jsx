@@ -9,6 +9,13 @@ export default function Pagination({ currentPage, totalPages }) {
 
   const search = searchParams.get("search");
   const sort = searchParams.get("sort");
+  const category = searchParams.get("category");
+  const brand = searchParams.get("brand");
+  const price = searchParams.get("price");
+  const rating = searchParams.get("rating");
+  const inStock = searchParams.get("inStock");
+  const discounted = searchParams.get("discounted");
+
 
   const getPageLink = (page) => {
     const base = `/products/page/${page}`;
@@ -16,6 +23,13 @@ export default function Pagination({ currentPage, totalPages }) {
 
     if (search) query.set("search", search);
     if (sort) query.set("sort", sort);
+    if (category) query.set("category", category);
+    if (brand) query.set("brand", brand);
+    if (price) query.set("price", price);
+    if (rating) query.set("rating", rating);
+    if (inStock) query.set("inStock", inStock);
+    if (discounted) query.set("discounted", discounted);
+
 
     const queryString = query.toString();
     return queryString ? `${base}?${queryString}` : base;

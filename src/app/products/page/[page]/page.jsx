@@ -4,7 +4,7 @@ import ProductGrid from "@/components/ProductGrid";
 import Pagination from "@/components/Pagination";
 import SearchClientWrapper from "@/components/SearchClientWrapper";
 import ProductSort from "@/components/ProductSort";
-// import ProductFilters from "@/components/ProductFilters";
+import ProductFilters from "@/components/ProductFilters";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 
@@ -18,6 +18,14 @@ export default async function ProductsPage({ params, searchParams }) {
   const search = searchParams?.search?.trim().toLowerCase() || "";
   const sort = searchParams?.sort || "default";
 
+  // دریافت پارامترهای فیلتر
+  const selectedCategories = searchParams?.category?.split(",") || [];
+  const selectedBrands = searchParams?.brand?.split(",") || [];
+  const selectedPriceRanges = searchParams?.price?.split(",") || [];
+  const minRating = parseInt(searchParams?.rating) || 0;
+  const inStockOnly = searchParams?.inStock === "1";
+  const discountOnly = searchParams?.discounted === "1";
+
   const limit = 12;
   const skip = (page - 1) * limit;
 
@@ -25,13 +33,12 @@ export default async function ProductsPage({ params, searchParams }) {
   let data = null;
 
   try {
-    // ✅ دریافت host و protocol به صورت داینامیک
     const headersList = headers();
     const host = headersList.get("host");
     const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
     const baseUrl = `${protocol}://${host}`;
 
-    const res = await fetch(`${headers().get("x-forwarded-proto") || "https"}://${headers().get("host")}/api/products`, {
+    const res = await fetch(`${baseUrl}/api/products`, {
       cache: "no-store",
     });
 
@@ -51,12 +58,47 @@ export default async function ProductsPage({ params, searchParams }) {
     );
   }
 
+  // اعمال فیلترها
   if (search.length >= 2) {
     allProducts = allProducts.filter((product) =>
       product.title.toLowerCase().includes(search)
     );
   }
 
+  if (selectedCategories.length) {
+    allProducts = allProducts.filter((p) =>
+      selectedCategories.includes(p.category)
+    );
+  }
+
+  if (selectedBrands.length) {
+    allProducts = allProducts.filter((p) =>
+      selectedBrands.includes(p.brand)
+    );
+  }
+
+  if (selectedPriceRanges.length) {
+    allProducts = allProducts.filter((p) => {
+      return selectedPriceRanges.some((range) => {
+        const [min, max] = range.split("-").map(Number);
+        return p.price >= min && p.price <= max;
+      });
+    });
+  }
+
+  if (minRating > 0) {
+    allProducts = allProducts.filter((p) => Math.floor(p.rating) >= minRating);
+  }
+
+  if (inStockOnly) {
+    allProducts = allProducts.filter((p) => p.stock > 0);
+  }
+
+  if (discountOnly) {
+    allProducts = allProducts.filter((p) => p.discountPercentage > 0);
+  }
+
+  // اعمال مرتب‌سازی
   if (sort === "new") {
     allProducts.sort((a, b) => b.id - a.id);
   } else if (sort === "price-low") {
@@ -72,17 +114,18 @@ export default async function ProductsPage({ params, searchParams }) {
   const total = allProducts.length;
   const totalPages = Math.ceil(total / limit);
 
+  // بررسی اعتبار صفحه
   if (page < 1 || (totalPages > 0 && page > totalPages)) {
     const validPage = Math.min(Math.max(page, 1), totalPages || 1);
     const params = new URLSearchParams();
     if (search) params.set("search", search);
     if (sort !== "default") params.set("sort", sort);
-    // اگر فیلترها رو فعال کردی، این بخش رو هم برگردون
-    // if (selectedCategories.length) params.set("category", selectedCategories.join(","));
-    // if (selectedBrands.length) params.set("brand", selectedBrands.join(","));
-    // if (inStockOnly) params.set("inStock", "1");
-    // if (discountOnly) params.set("discounted", "1");
-    // if (minRating > 0) params.set("rating", minRating.toString());
+    if (selectedCategories.length) params.set("category", selectedCategories.join(","));
+    if (selectedBrands.length) params.set("brand", selectedBrands.join(","));
+    if (selectedPriceRanges.length) params.set("price", selectedPriceRanges.join(","));
+    if (inStockOnly) params.set("inStock", "1");
+    if (discountOnly) params.set("discounted", "1");
+    if (minRating > 0) params.set("rating", minRating.toString());
 
     redirect(`/products/page/${validPage}?${params.toString()}`);
   }
@@ -113,10 +156,10 @@ export default async function ProductsPage({ params, searchParams }) {
       </h1>
 
       <div className="flex flex-col md:flex-row gap-6">
-        {/* <ProductFilters
+        <ProductFilters
           categories={[...new Set(data.products.map((p) => p.category))]}
           brands={[...new Set(data.products.map((p) => p.brand))]}
-        /> */}
+        />
 
         <div className="flex-1 flex flex-col gap-4">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
