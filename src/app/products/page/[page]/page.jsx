@@ -14,6 +14,7 @@ export const metadata = {
 };
 
 export default async function ProductsPage({ params, searchParams }) {
+  // --- استخراج پارامترهای جستجو و فیلتر ---
   const page = +params.page || 1;
   const search = searchParams?.search?.trim().toLowerCase() || "";
   const sort = searchParams?.sort || "default";
@@ -31,6 +32,7 @@ export default async function ProductsPage({ params, searchParams }) {
   let allProducts = [];
   let data = null;
 
+  // --- دریافت اطلاعات محصولات از API ---
   try {
     const headersList = headers();
     const host = headersList.get("host");
@@ -47,7 +49,6 @@ export default async function ProductsPage({ params, searchParams }) {
     allProducts = data.products;
   } catch (error) {
     console.error("❌ Error fetching products:", error.message);
-
     return (
       <main className="min-h-screen flex items-center justify-center p-4">
         <p className="text-red-600 font-medium text-center">
@@ -57,86 +58,91 @@ export default async function ProductsPage({ params, searchParams }) {
     );
   }
 
-  // فیلتر جستجو
+  // --- اعمال فیلترها روی لیست محصولات ---
   if (search.length >= 2) {
-    allProducts = allProducts.filter((product) =>
-      product.title.toLowerCase().includes(search)
+    allProducts = allProducts.filter((p) =>
+      p.title.toLowerCase().includes(search)
     );
   }
 
-  // فیلتر دسته‌بندی
   if (selectedCategories.length) {
     allProducts = allProducts.filter((p) =>
       selectedCategories.includes(p.category)
     );
   }
 
-  // فیلتر برند
   if (selectedBrands.length) {
     allProducts = allProducts.filter((p) =>
       selectedBrands.includes(p.brand)
     );
   }
 
-  // فیلتر قیمت
   if (selectedPriceRanges.length) {
-    allProducts = allProducts.filter((p) => {
-      return selectedPriceRanges.some((range) => {
+    allProducts = allProducts.filter((p) =>
+      selectedPriceRanges.some((range) => {
         const [min, max] = range.split("-").map(Number);
         return p.price >= min && p.price <= max;
-      });
-    });
+      })
+    );
   }
 
-  // فیلتر امتیاز
   if (minRating > 0) {
     allProducts = allProducts.filter((p) => Math.floor(p.rating) >= minRating);
   }
 
-  // فیلتر موجودی
   if (inStockOnly) {
     allProducts = allProducts.filter((p) => p.stock > 0);
   }
 
-  // فیلتر تخفیف
   if (discountOnly) {
     allProducts = allProducts.filter((p) => p.discountPercentage > 0);
   }
 
-  // مرتب‌سازی
-  if (sort === "new") {
-    allProducts.sort((a, b) => b.id - a.id);
-  } else if (sort === "price-low") {
-    allProducts.sort((a, b) => a.price - b.price);
-  } else if (sort === "price-high") {
-    allProducts.sort((a, b) => b.price - a.price);
-  } else if (sort === "title-asc") {
-    allProducts.sort((a, b) => a.title.localeCompare(b.title));
-  } else if (sort === "title-desc") {
-    allProducts.sort((a, b) => b.title.localeCompare(a.title));
+  // --- مرتب‌سازی بر اساس نوع انتخاب‌شده ---
+  switch (sort) {
+    case "new":
+      allProducts.sort((a, b) => b.id - a.id);
+      break;
+    case "price-low":
+      allProducts.sort((a, b) => a.price - b.price);
+      break;
+    case "price-high":
+      allProducts.sort((a, b) => b.price - a.price);
+      break;
+    case "title-asc":
+      allProducts.sort((a, b) => a.title.localeCompare(b.title));
+      break;
+    case "title-desc":
+      allProducts.sort((a, b) => b.title.localeCompare(a.title));
+      break;
+    default:
+      break;
   }
 
   const total = allProducts.length;
   const totalPages = Math.ceil(total / limit);
 
-  // اگر شماره صفحه معتبر نیست، ریدایرکت کن
-  if (page < 1 || (totalPages > 0 && page > totalPages)) {
-    const validPage = Math.min(Math.max(page, 1), totalPages || 1);
+    // --- بررسی معتبر بودن شماره صفحه ---
+  // فقط در صورتی ریدایرکت کن که شماره صفحه نامعتبر است و محصولی برای نمایش وجود دارد
+  if ((page < 1 || page > totalPages) && total > 0) {
+    const validPage = Math.min(Math.max(page, 1), totalPages); // totalPages در اینجا حتماً > 0 است
     const params = new URLSearchParams();
+
     if (search) params.set("search", search);
     if (sort !== "default") params.set("sort", sort);
     if (selectedCategories.length) params.set("category", selectedCategories.join(","));
     if (selectedBrands.length) params.set("brand", selectedBrands.join(","));
     if (selectedPriceRanges.length) params.set("price", selectedPriceRanges.join(","));
+    if (minRating > 0) params.set("rating", minRating.toString());
     if (inStockOnly) params.set("inStock", "1");
     if (discountOnly) params.set("discounted", "1");
-    if (minRating > 0) params.set("rating", minRating.toString());
 
     redirect(`/products/page/${validPage}?${params.toString()}`);
   }
 
   const products = allProducts.slice(skip, skip + limit);
 
+  // --- اگر هیچ محصولی پیدا نشد ---
   if (total === 0) {
     return (
       <main className="min-h-screen flex flex-col p-4 md:p-6">
@@ -154,6 +160,7 @@ export default async function ProductsPage({ params, searchParams }) {
     );
   }
 
+  // --- نمایش نهایی صفحه محصولات ---
   return (
     <main className="min-h-screen flex flex-col p-4 md:p-6">
       <h1 className="text-xl md:text-2xl font-bold text-[#002AB3] mb-6 text-start">

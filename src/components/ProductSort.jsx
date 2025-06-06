@@ -1,10 +1,11 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, usePathname } from "next/navigation"; // اضافه کردن usePathname
 
 export default function ProductSort() {
     const router = useRouter();
     const searchParams = useSearchParams();
+    const pathname = usePathname(); // دریافت pathname شامل شماره صفحه
 
     const currentSort = searchParams.get("sort") || "default";
 
@@ -18,7 +19,8 @@ export default function ProductSort() {
             params.set("sort", selectedSort);
         }
 
-        router.push(`/products/page/1?${params.toString()}`);
+        // به جای ریدایرکت به صفحه 1، به pathname فعلی با پارامترهای جدید ریدایرکت کن
+        router.push(`${pathname}?${params.toString()}`);
     };
 
     return (

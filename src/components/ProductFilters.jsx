@@ -1,3 +1,4 @@
+// src/components/ProductFilters.jsx
 "use client";
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
@@ -45,36 +46,52 @@ export default function ProductFilters({ categories, brands }) {
         setMinRating(ratingFromURL);
         setInStockOnly(inStock);
         setDiscountOnly(discounted);
-    }, []);
+    }, [searchParams]); // <-- searchParams را به وابستگی‌ها اضافه کنید
+
 
     // بروزرسانی URL هنگام تغییر فیلترها
     useEffect(() => {
-        const params = new URLSearchParams();
+        // شروع با پارامترهای جستجوی موجود در URL
+        const params = new URLSearchParams(searchParams.toString()); // <-- تغییر اصلی اینجا است
 
+        // بروزرسانی یا حذف پارامترهای فیلتر
         if (selectedCategories.length) {
             params.set("category", selectedCategories.join(","));
+        } else {
+            params.delete("category"); // اگر فیلتر حذف شد، پارامتر را هم حذف کن
         }
 
         if (selectedBrands.length) {
             params.set("brand", selectedBrands.join(","));
+        } else {
+             params.delete("brand"); // اگر فیلتر حذف شد، پارامتر را هم حذف کن
         }
 
         if (selectedPriceRanges.length) {
             params.set("price", selectedPriceRanges.join(","));
+        } else {
+             params.delete("price"); // اگر فیلتر حذف شد، پارامتر را هم حذف کن
         }
 
         if (inStockOnly) {
             params.set("inStock", "1");
+        } else {
+             params.delete("inStock"); // اگر فیلتر حذف شد، پارامتر را هم حذف کن
         }
 
         if (discountOnly) {
             params.set("discounted", "1");
+        } else {
+             params.delete("discounted"); // اگر فیلتر حذف شد، پارامتر را هم حذف کن
         }
 
         if (minRating) {
             params.set("rating", minRating);
+        } else {
+             params.delete("rating"); // اگر فیلتر حذف شد، پارامتر را هم حذف کن
         }
 
+        // به روزرسانی URL با حفظ pathname (شماره صفحه) و پارامترهای موجود + فیلترهای جدید
         router.push(`${pathname}?${params.toString()}`);
     }, [
         selectedCategories,
@@ -83,6 +100,9 @@ export default function ProductFilters({ categories, brands }) {
         minRating,
         inStockOnly,
         discountOnly,
+        pathname, // <-- pathname را به وابستگی‌ها اضافه کنید
+        router, // <-- router را به وابستگی‌ها اضافه کنید (توصیه می‌شود)
+        searchParams // <-- searchParams را به وابستگی‌ها اضافه کنید
     ]);
 
     return (
