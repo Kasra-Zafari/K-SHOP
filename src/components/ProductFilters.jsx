@@ -2,13 +2,14 @@
 "use client";
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react"; // Import useCallback
 
 export default function ProductFilters({ categories, brands }) {
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
 
+    // State variables
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [selectedBrands, setSelectedBrands] = useState([]);
     const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
@@ -23,15 +24,8 @@ export default function ProductFilters({ categories, brands }) {
         { label: "$30000 - $40000", value: "30000-40000" },
     ];
 
-    const toggleInArray = (value, array, setArray) => {
-        setArray(
-            array.includes(value)
-                ? array.filter((v) => v !== value)
-                : [...array, value]
-        );
-    };
-
-    // خواندن فیلترها از URL هنگام لود
+    // Effect to read filters from URL on load/URL change
+    // This useEffect only initializes the state from the URL
     useEffect(() => {
         const categoriesFromURL = searchParams.get("category")?.split(",") || [];
         const brandsFromURL = searchParams.get("brand")?.split(",") || [];
@@ -46,64 +40,62 @@ export default function ProductFilters({ categories, brands }) {
         setMinRating(ratingFromURL);
         setInStockOnly(inStock);
         setDiscountOnly(discounted);
-    }, [searchParams]); // <-- searchParams را به وابستگی‌ها اضافه کنید
+    }, [searchParams]); // Depend on searchParams so it re-syncs if URL changes externally
 
+    // Function to update URL based on a specific filter change
+    const updateUrlWithFilter = useCallback((paramName, value) => {
+        // Start with existing search params
+        const params = new URLSearchParams(searchParams.toString());
 
-    // بروزرسانی URL هنگام تغییر فیلترها
-    useEffect(() => {
-        // شروع با پارامترهای جستجوی موجود در URL
-        const params = new URLSearchParams(searchParams.toString()); // <-- تغییر اصلی اینجا است
-
-        // بروزرسانی یا حذف پارامترهای فیلتر
-        if (selectedCategories.length) {
-            params.set("category", selectedCategories.join(","));
-        } else {
-            params.delete("category"); // اگر فیلتر حذف شد، پارامتر را هم حذف کن
+        if (value === null || value === '' || (Array.isArray(value) && value.length === 0)) {
+             // If value is null, empty string, or empty array, delete the param
+            params.delete(paramName);
+        } else if (Array.isArray(value)) {
+             // If value is an array, join it with commas
+             params.set(paramName, value.join(","));
+        }
+        else {
+            // Otherwise, set the value
+            params.set(paramName, value.toString());
         }
 
-        if (selectedBrands.length) {
-            params.set("brand", selectedBrands.join(","));
-        } else {
-             params.delete("brand"); // اگر فیلتر حذف شد، پارامتر را هم حذف کن
-        }
-
-        if (selectedPriceRanges.length) {
-            params.set("price", selectedPriceRanges.join(","));
-        } else {
-             params.delete("price"); // اگر فیلتر حذف شد، پارامتر را هم حذف کن
-        }
-
-        if (inStockOnly) {
-            params.set("inStock", "1");
-        } else {
-             params.delete("inStock"); // اگر فیلتر حذف شد، پارامتر را هم حذف کن
-        }
-
-        if (discountOnly) {
-            params.set("discounted", "1");
-        } else {
-             params.delete("discounted"); // اگر فیلتر حذف شد، پارامتر را هم حذف کن
-        }
-
-        if (minRating) {
-            params.set("rating", minRating);
-        } else {
-             params.delete("rating"); // اگر فیلتر حذف شد، پارامتر را هم حذف کن
-        }
-
-        // به روزرسانی URL با حفظ pathname (شماره صفحه) و پارامترهای موجود + فیلترهای جدید
+        // Push the new URL, preserving the pathname (page number)
         router.push(`${pathname}?${params.toString()}`);
-    }, [
-        selectedCategories,
-        selectedBrands,
-        selectedPriceRanges,
-        minRating,
-        inStockOnly,
-        discountOnly,
-        pathname, // <-- pathname را به وابستگی‌ها اضافه کنید
-        router, // <-- router را به وابستگی‌ها اضافه کنید (توصیه می‌شود)
-        searchParams // <-- searchParams را به وابستگی‌ها اضافه کنید
-    ]);
+    }, [pathname, router, searchParams]); // Depend on pathname, router, searchParams
+
+
+    // Modified toggleInArray to update state AND call updateUrlWithFilter
+    const toggleInArrayAndUpdateUrl = (value, array, setArray, paramName) => {
+        const newArray = array.includes(value)
+            ? array.filter((v) => v !== value)
+            : [...array, value];
+        setArray(newArray); // Update state
+
+        // Update URL based on the *new* array value
+        updateUrlWithFilter(paramName, newArray);
+    };
+
+    // Modified handlers to update state AND call updateUrlWithFilter
+    const handleRatingChange = (e) => {
+        const newValue = e.target.value;
+        setMinRating(newValue); // Update state
+        updateUrlWithFilter('rating', newValue); // Update URL
+    };
+
+    const handleInStockChange = (e) => {
+        const newValue = e.target.checked;
+        setInStockOnly(newValue); // Update state
+        updateUrlWithFilter('inStock', newValue ? "1" : null); // Update URL (use "1" for true, null for false)
+    };
+
+    const handleDiscountChange = (e) => {
+        const newValue = e.target.checked;
+        setDiscountOnly(newValue); // Update state
+        updateUrlWithFilter('discounted', newValue ? "1" : null); // Update URL (use "1" for true, null for false)
+    };
+
+
+    // Remove the second useEffect that watched state changes
 
     return (
         <aside className="w-full md:w-64 border rounded p-4 space-y-6 text-sm text-[#002AB3]">
@@ -116,7 +108,7 @@ export default function ProductFilters({ categories, brands }) {
                             type="checkbox"
                             checked={selectedCategories.includes(category)}
                             onChange={() =>
-                                toggleInArray(category, selectedCategories, setSelectedCategories)
+                                toggleInArrayAndUpdateUrl(category, selectedCategories, setSelectedCategories, 'category') // Use new handler
                             }
                             className="mr-2"
                         />
@@ -134,7 +126,7 @@ export default function ProductFilters({ categories, brands }) {
                             type="checkbox"
                             checked={selectedBrands.includes(brand)}
                             onChange={() =>
-                                toggleInArray(brand, selectedBrands, setSelectedBrands)
+                                toggleInArrayAndUpdateUrl(brand, selectedBrands, setSelectedBrands, 'brand') // Use new handler
                             }
                             className="mr-2"
                         />
@@ -152,7 +144,7 @@ export default function ProductFilters({ categories, brands }) {
                             type="checkbox"
                             checked={selectedPriceRanges.includes(range.value)}
                             onChange={() =>
-                                toggleInArray(range.value, selectedPriceRanges, setSelectedPriceRanges)
+                                toggleInArrayAndUpdateUrl(range.value, selectedPriceRanges, setSelectedPriceRanges, 'price') // Use new handler
                             }
                             className="mr-2"
                         />
@@ -166,7 +158,7 @@ export default function ProductFilters({ categories, brands }) {
                 <h3 className="font-semibold mb-2">Minimum Rating</h3>
                 <select
                     value={minRating}
-                    onChange={(e) => setMinRating(e.target.value)}
+                    onChange={handleRatingChange} // Use new handler
                     className="border rounded px-2 py-1 text-[#002AB3] w-full"
                 >
                     <option value="">Any</option>
@@ -184,7 +176,7 @@ export default function ProductFilters({ categories, brands }) {
                     <input
                         type="checkbox"
                         checked={inStockOnly}
-                        onChange={() => setInStockOnly(!inStockOnly)}
+                        onChange={handleInStockChange} // Use new handler
                         className="mr-2"
                     />
                     In Stock Only
@@ -194,7 +186,7 @@ export default function ProductFilters({ categories, brands }) {
                     <input
                         type="checkbox"
                         checked={discountOnly}
-                        onChange={() => setDiscountOnly(!discountOnly)}
+                        onChange={handleDiscountChange} // Use new handler
                         className="mr-2"
                     />
                     Discounted Only
