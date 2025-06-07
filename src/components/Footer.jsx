@@ -23,7 +23,6 @@ export default function Footer() {
         </nav>
 
         <div className="flex gap-4">
-          {/* social media*/}
           <a
             href="https://twitter.com"
             target="_blank"
