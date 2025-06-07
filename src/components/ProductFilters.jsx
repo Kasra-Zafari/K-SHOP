@@ -2,14 +2,13 @@
 "use client";
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { useState, useEffect, useCallback } from "react"; // Import useCallback
+import { useState, useEffect, useCallback } from "react";
 
 export default function ProductFilters({ categories, brands }) {
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
 
-    // State variables
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [selectedBrands, setSelectedBrands] = useState([]);
     const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
@@ -24,8 +23,6 @@ export default function ProductFilters({ categories, brands }) {
         { label: "$30000 - $40000", value: "30000-40000" },
     ];
 
-    // Effect to read filters from URL on load/URL change
-    // This useEffect only initializes the state from the URL
     useEffect(() => {
         const categoriesFromURL = searchParams.get("category")?.split(",") || [];
         const brandsFromURL = searchParams.get("brand")?.split(",") || [];
@@ -40,75 +37,99 @@ export default function ProductFilters({ categories, brands }) {
         setMinRating(ratingFromURL);
         setInStockOnly(inStock);
         setDiscountOnly(discounted);
-    }, [searchParams]); // Depend on searchParams so it re-syncs if URL changes externally
+    }, [searchParams]);
 
-    // Function to update URL based on a specific filter change
     const updateUrlWithFilter = useCallback((paramName, value) => {
-        // Start with existing search params
         const params = new URLSearchParams(searchParams.toString());
 
         if (value === null || value === '' || (Array.isArray(value) && value.length === 0)) {
-             // If value is null, empty string, or empty array, delete the param
             params.delete(paramName);
         } else if (Array.isArray(value)) {
-             // If value is an array, join it with commas
-             params.set(paramName, value.join(","));
-        }
-        else {
-            // Otherwise, set the value
+            params.set(paramName, value.join(","));
+        } else {
             params.set(paramName, value.toString());
         }
 
-        // Push the new URL, preserving the pathname (page number)
         router.push(`${pathname}?${params.toString()}`);
-    }, [pathname, router, searchParams]); // Depend on pathname, router, searchParams
+    }, [pathname, router, searchParams]);
 
-
-    // Modified toggleInArray to update state AND call updateUrlWithFilter
     const toggleInArrayAndUpdateUrl = (value, array, setArray, paramName) => {
         const newArray = array.includes(value)
             ? array.filter((v) => v !== value)
             : [...array, value];
-        setArray(newArray); // Update state
-
-        // Update URL based on the *new* array value
+        setArray(newArray);
         updateUrlWithFilter(paramName, newArray);
     };
 
-    // Modified handlers to update state AND call updateUrlWithFilter
     const handleRatingChange = (e) => {
         const newValue = e.target.value;
-        setMinRating(newValue); // Update state
-        updateUrlWithFilter('rating', newValue); // Update URL
+        setMinRating(newValue);
+        updateUrlWithFilter('rating', newValue);
     };
 
     const handleInStockChange = (e) => {
         const newValue = e.target.checked;
-        setInStockOnly(newValue); // Update state
-        updateUrlWithFilter('inStock', newValue ? "1" : null); // Update URL (use "1" for true, null for false)
+        setInStockOnly(newValue);
+        updateUrlWithFilter('inStock', newValue ? "1" : null);
     };
 
     const handleDiscountChange = (e) => {
         const newValue = e.target.checked;
-        setDiscountOnly(newValue); // Update state
-        updateUrlWithFilter('discounted', newValue ? "1" : null); // Update URL (use "1" for true, null for false)
+        setDiscountOnly(newValue);
+        updateUrlWithFilter('discounted', newValue ? "1" : null);
     };
 
+    const handleClearFilters = () => {
+        setSelectedCategories([]);
+        setSelectedBrands([]);
+        setSelectedPriceRanges([]);
+        setMinRating("");
+        setInStockOnly(false);
+        setDiscountOnly(false);
 
-    // Remove the second useEffect that watched state changes
+        const params = new URLSearchParams(searchParams.toString());
+        params.delete('category');
+        params.delete('brand');
+        params.delete('price');
+        params.delete('rating');
+        params.delete('inStock');
+        params.delete('discounted');
+
+        router.push(`${pathname}?${params.toString()}`);
+    };
+
+    const sectionClass = "border rounded p-3 space-y-2 h-40 overflow-y-auto bg-white";
+    const titleClass = "font-semibold mb-2 text-[#002AB3]";
 
     return (
-        <aside className="w-full md:w-64 border rounded p-4 space-y-6 text-sm text-[#002AB3]">
+        <aside className="w-full md:w-64 border rounded p-4 space-y-5 text-sm text-[#002AB3] bg-gray-50">
+            {/* دکمه Clear Filters */}
+            {(selectedCategories.length > 0 ||
+              selectedBrands.length > 0 ||
+              selectedPriceRanges.length > 0 ||
+              minRating !== "" ||
+              inStockOnly ||
+              discountOnly) && (
+                <div className="flex justify-end">
+                    <button
+                        onClick={handleClearFilters}
+                        className="px-3 py-1 text-xs bg-[#002AB3] text-white rounded hover:bg-[#0036d1] transition"
+                    >
+                        Clear Filters
+                    </button>
+                </div>
+            )}
+
             {/* دسته‌بندی */}
-            <div>
-                <h3 className="font-semibold mb-2">Category</h3>
+            <div className={sectionClass}>
+                <h3 className={titleClass}>Category</h3>
                 {categories.map((category) => (
-                    <label key={category} className="flex items-center mb-1">
+                    <label key={category} className="flex items-center">
                         <input
                             type="checkbox"
                             checked={selectedCategories.includes(category)}
                             onChange={() =>
-                                toggleInArrayAndUpdateUrl(category, selectedCategories, setSelectedCategories, 'category') // Use new handler
+                                toggleInArrayAndUpdateUrl(category, selectedCategories, setSelectedCategories, 'category')
                             }
                             className="mr-2"
                         />
@@ -118,15 +139,15 @@ export default function ProductFilters({ categories, brands }) {
             </div>
 
             {/* برند */}
-            <div>
-                <h3 className="font-semibold mb-2">Brand</h3>
+            <div className={sectionClass}>
+                <h3 className={titleClass}>Brand</h3>
                 {brands.map((brand) => (
-                    <label key={brand} className="flex items-center mb-1">
+                    <label key={brand} className="flex items-center">
                         <input
                             type="checkbox"
                             checked={selectedBrands.includes(brand)}
                             onChange={() =>
-                                toggleInArrayAndUpdateUrl(brand, selectedBrands, setSelectedBrands, 'brand') // Use new handler
+                                toggleInArrayAndUpdateUrl(brand, selectedBrands, setSelectedBrands, 'brand')
                             }
                             className="mr-2"
                         />
@@ -136,15 +157,15 @@ export default function ProductFilters({ categories, brands }) {
             </div>
 
             {/* محدوده قیمت */}
-            <div>
-                <h3 className="font-semibold mb-2">Price Range</h3>
+            <div className={sectionClass}>
+                <h3 className={titleClass}>Price Range</h3>
                 {priceRanges.map((range) => (
-                    <label key={range.value} className="flex items-center mb-1">
+                    <label key={range.value} className="flex items-center">
                         <input
                             type="checkbox"
                             checked={selectedPriceRanges.includes(range.value)}
                             onChange={() =>
-                                toggleInArrayAndUpdateUrl(range.value, selectedPriceRanges, setSelectedPriceRanges, 'price') // Use new handler
+                                toggleInArrayAndUpdateUrl(range.value, selectedPriceRanges, setSelectedPriceRanges, 'price')
                             }
                             className="mr-2"
                         />
@@ -154,12 +175,12 @@ export default function ProductFilters({ categories, brands }) {
             </div>
 
             {/* امتیاز */}
-            <div>
-                <h3 className="font-semibold mb-2">Minimum Rating</h3>
+            <div className="border rounded p-3 bg-white">
+                <h3 className={titleClass}>Minimum Rating</h3>
                 <select
                     value={minRating}
-                    onChange={handleRatingChange} // Use new handler
-                    className="border rounded px-2 py-1 text-[#002AB3] w-full"
+                    onChange={handleRatingChange}
+                    className="border rounded px-2 py-1 w-full text-[#002AB3]"
                 >
                     <option value="">Any</option>
                     {[5, 4, 3, 2, 1].map((r) => (
@@ -171,22 +192,21 @@ export default function ProductFilters({ categories, brands }) {
             </div>
 
             {/* موجودی و تخفیف */}
-            <div className="space-y-2">
+            <div className="border rounded p-3 bg-white space-y-2">
                 <label className="flex items-center">
                     <input
                         type="checkbox"
                         checked={inStockOnly}
-                        onChange={handleInStockChange} // Use new handler
+                        onChange={handleInStockChange}
                         className="mr-2"
                     />
                     In Stock Only
                 </label>
-
                 <label className="flex items-center">
                     <input
                         type="checkbox"
                         checked={discountOnly}
-                        onChange={handleDiscountChange} // Use new handler
+                        onChange={handleDiscountChange}
                         className="mr-2"
                     />
                     Discounted Only
