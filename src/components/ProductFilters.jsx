@@ -1,4 +1,3 @@
-// src/components/ProductFilters.jsx
 "use client";
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
@@ -15,6 +14,9 @@ export default function ProductFilters({ categories, brands }) {
     const [minRating, setMinRating] = useState("");
     const [inStockOnly, setInStockOnly] = useState(false);
     const [discountOnly, setDiscountOnly] = useState(false);
+
+    // حالت نمایش کرکره‌ای در موبایل
+    const [showMobileFilters, setShowMobileFilters] = useState(false);
 
     const priceRanges = [
         { label: "$0 - $5000", value: "0-5000" },
@@ -42,7 +44,11 @@ export default function ProductFilters({ categories, brands }) {
     const updateUrlWithFilter = useCallback((paramName, value) => {
         const params = new URLSearchParams(searchParams.toString());
 
-        if (value === null || value === '' || (Array.isArray(value) && value.length === 0)) {
+        if (
+            value === null ||
+            value === "" ||
+            (Array.isArray(value) && value.length === 0)
+        ) {
             params.delete(paramName);
         } else if (Array.isArray(value)) {
             params.set(paramName, value.join(","));
@@ -64,19 +70,19 @@ export default function ProductFilters({ categories, brands }) {
     const handleRatingChange = (e) => {
         const newValue = e.target.value;
         setMinRating(newValue);
-        updateUrlWithFilter('rating', newValue);
+        updateUrlWithFilter("rating", newValue);
     };
 
     const handleInStockChange = (e) => {
         const newValue = e.target.checked;
         setInStockOnly(newValue);
-        updateUrlWithFilter('inStock', newValue ? "1" : null);
+        updateUrlWithFilter("inStock", newValue ? "1" : null);
     };
 
     const handleDiscountChange = (e) => {
         const newValue = e.target.checked;
         setDiscountOnly(newValue);
-        updateUrlWithFilter('discounted', newValue ? "1" : null);
+        updateUrlWithFilter("discounted", newValue ? "1" : null);
     };
 
     const handleClearFilters = () => {
@@ -88,29 +94,30 @@ export default function ProductFilters({ categories, brands }) {
         setDiscountOnly(false);
 
         const params = new URLSearchParams(searchParams.toString());
-        params.delete('category');
-        params.delete('brand');
-        params.delete('price');
-        params.delete('rating');
-        params.delete('inStock');
-        params.delete('discounted');
+        params.delete("category");
+        params.delete("brand");
+        params.delete("price");
+        params.delete("rating");
+        params.delete("inStock");
+        params.delete("discounted");
 
         router.push(`${pathname}?${params.toString()}`);
     };
 
-    const sectionClass = "border rounded p-3 space-y-2 h-40 overflow-y-auto bg-white";
+    const sectionClass =
+        "border rounded p-3 space-y-2 h-40 overflow-y-auto bg-white mb-4";
     const titleClass = "font-semibold mb-2 text-[#002AB3]";
 
-    return (
-        <aside className="w-full md:w-64 border rounded p-4 space-y-5 text-sm text-[#002AB3] bg-gray-50">
-            {/* دکمه Clear Filters */}
+    // محتوای فیلترها (دسکتاپ و موبایل)
+    const FiltersContent = () => (
+        <>
             {(selectedCategories.length > 0 ||
-              selectedBrands.length > 0 ||
-              selectedPriceRanges.length > 0 ||
-              minRating !== "" ||
-              inStockOnly ||
-              discountOnly) && (
-                <div className="flex justify-end">
+                selectedBrands.length > 0 ||
+                selectedPriceRanges.length > 0 ||
+                minRating !== "" ||
+                inStockOnly ||
+                discountOnly) && (
+                <div className="flex justify-end mb-2">
                     <button
                         onClick={handleClearFilters}
                         className="px-3 py-1 text-xs bg-[#002AB3] text-white rounded hover:bg-[#0036d1] transition"
@@ -129,7 +136,12 @@ export default function ProductFilters({ categories, brands }) {
                             type="checkbox"
                             checked={selectedCategories.includes(category)}
                             onChange={() =>
-                                toggleInArrayAndUpdateUrl(category, selectedCategories, setSelectedCategories, 'category')
+                                toggleInArrayAndUpdateUrl(
+                                    category,
+                                    selectedCategories,
+                                    setSelectedCategories,
+                                    "category"
+                                )
                             }
                             className="mr-2"
                         />
@@ -147,7 +159,12 @@ export default function ProductFilters({ categories, brands }) {
                             type="checkbox"
                             checked={selectedBrands.includes(brand)}
                             onChange={() =>
-                                toggleInArrayAndUpdateUrl(brand, selectedBrands, setSelectedBrands, 'brand')
+                                toggleInArrayAndUpdateUrl(
+                                    brand,
+                                    selectedBrands,
+                                    setSelectedBrands,
+                                    "brand"
+                                )
                             }
                             className="mr-2"
                         />
@@ -165,7 +182,12 @@ export default function ProductFilters({ categories, brands }) {
                             type="checkbox"
                             checked={selectedPriceRanges.includes(range.value)}
                             onChange={() =>
-                                toggleInArrayAndUpdateUrl(range.value, selectedPriceRanges, setSelectedPriceRanges, 'price')
+                                toggleInArrayAndUpdateUrl(
+                                    range.value,
+                                    selectedPriceRanges,
+                                    setSelectedPriceRanges,
+                                    "price"
+                                )
                             }
                             className="mr-2"
                         />
@@ -192,7 +214,7 @@ export default function ProductFilters({ categories, brands }) {
             </div>
 
             {/* موجودی و تخفیف */}
-            <div className="border rounded p-3 bg-white space-y-2">
+            <div className="border rounded p-3 bg-white space-y-2 mt-4">
                 <label className="flex items-center">
                     <input
                         type="checkbox"
@@ -211,6 +233,37 @@ export default function ProductFilters({ categories, brands }) {
                     />
                     Discounted Only
                 </label>
+            </div>
+        </>
+    );
+
+    return (
+        <aside className="w-full md:w-64 border rounded p-4 space-y-5 text-sm text-[#002AB3] bg-gray-50">
+            {/* دکمه نمایش کرکره‌ای فقط در موبایل */}
+            <div className="md:hidden mb-3">
+                <button
+                    onClick={() => setShowMobileFilters(!showMobileFilters)}
+                    className="w-full bg-[#002AB3] text-white py-2 rounded"
+                    aria-expanded={showMobileFilters}
+                    aria-controls="mobile-filters-content"
+                >
+                    {showMobileFilters ? "Hide Filters" : "Show Filters"}
+                </button>
+            </div>
+
+            {/* نمایش فیلترها در موبایل به صورت کرکره‌ای */}
+            <div
+                id="mobile-filters-content"
+                className={`md:hidden transition-all duration-300 overflow-hidden ${
+                    showMobileFilters ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"
+                }`}
+            >
+                <FiltersContent />
+            </div>
+
+            {/* نمایش فیلترها در دسکتاپ */}
+            <div className="hidden md:block">
+                <FiltersContent />
             </div>
         </aside>
     );
