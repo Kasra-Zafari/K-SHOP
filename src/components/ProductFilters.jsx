@@ -19,11 +19,17 @@ export default function ProductFilters({ categories, brands }) {
     const [showMobileFilters, setShowMobileFilters] = useState(false);
 
     const priceRanges = [
-        { label: "$0 - $5000", value: "0-5000" },
-        { label: "$5000 - $15000", value: "5000-15000" },
-        { label: "$15000 - $30000", value: "15000-30000" },
-        { label: "$30000 - $40000", value: "30000-40000" },
-    ];
+    { label: "$0 - $200", value: "0-200" },
+    { label: "$200 - $400", value: "200-400" },
+    { label: "$400 - $600", value: "400-600" },
+    { label: "$600 - $800", value: "600-800" },
+    { label: "$800 - $1000", value: "800-1000" },
+    { label: "$1000 - $3000", value: "1000-3000" },
+    { label: "$3000 - $5000", value: "3000-5000" },
+    { label: "$5000 - $15000", value: "5000-15000" },
+    { label: "$15000 - $30000", value: "15000-30000" },
+    { label: "$30000 - $40000", value: "30000-40000" },
+];
 
     useEffect(() => {
         const categoriesFromURL = searchParams.get("category")?.split(",") || [];
