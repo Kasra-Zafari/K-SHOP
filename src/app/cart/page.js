@@ -12,6 +12,13 @@ export default function CartPage() {
     0
   );
 
+  // محاسبه تعداد کل آیتم‌ها
+  const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+
+  // تبدیل عدد به فرمت ارزی با کاما
+  const formatPrice = (price) =>
+    price.toLocaleString("en-US", { style: "currency", currency: "USD" });
+
   if (cartItems.length === 0) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-16 text-center">
@@ -25,7 +32,10 @@ export default function CartPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-10">
-      <h1 className="text-3xl font-bold mb-6 text-[#002AB3]">Shopping Cart</h1>
+      {/* نمایش تعداد کل آیتم‌ها کنار عنوان */}
+      <h1 className="text-3xl font-bold mb-6 text-[#002AB3]">
+        Shopping Cart ({totalItems} item{totalItems > 1 ? "s" : ""})
+      </h1>
 
       <div className="space-y-6">
         {cartItems.map((item) => (
@@ -43,7 +53,10 @@ export default function CartPage() {
 
             <div className="flex-1">
               <h3 className="text-lg font-semibold text-[#002AB3]">{item.title}</h3>
-              <p className="text-gray-600">${item.price} x {item.quantity}</p>
+              <p className="text-gray-600">
+                {/* تبدیل قیمت به فرمت ارزی */}
+                {formatPrice(item.price)} x {item.quantity}
+              </p>
               <div className="flex items-center gap-2 mt-2">
                 <button
                   onClick={() => decreaseQty(item.id)}
@@ -62,7 +75,8 @@ export default function CartPage() {
             </div>
 
             <div className="flex flex-col items-end gap-2">
-              <p className="font-semibold text-[#002AB3]">${item.price * item.quantity}</p>
+              {/* تبدیل قیمت به فرمت ارزی */}
+              <p className="font-semibold text-[#002AB3]">{formatPrice(item.price * item.quantity)}</p>
               <button
                 onClick={() => removeFromCart(item.id)}
                 className="text-sm text-red-500 hover:underline"
@@ -74,6 +88,7 @@ export default function CartPage() {
         ))}
       </div>
 
+      {/* بخش پایین صفحه: ادامه خرید و جمع کل و دکمه ادامه پرداخت */}
       <div className="flex justify-between items-center mt-10 border-t pt-4">
         <Link
           href="/products/page/1"
@@ -81,9 +96,18 @@ export default function CartPage() {
         >
           ← Continue Shopping
         </Link>
+
         <p className="text-xl font-bold text-[#002AB3]">
-          Total: ${totalPrice.toFixed(2)}
+          Total: {formatPrice(totalPrice)}
         </p>
+
+        {/* دکمه ادامه پرداخت (می‌تونی لینکش رو تغییر بدی) */}
+        <Link
+          href="/checkout"
+          className="bg-[#002AB3] text-white px-4 py-2 rounded hover:bg-[#001A80]"
+        >
+          Proceed to Checkout
+        </Link>
       </div>
     </div>
   );
