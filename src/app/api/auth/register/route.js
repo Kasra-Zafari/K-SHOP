@@ -1,34 +1,40 @@
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import fs from 'fs';
-import path from 'path';
-
-const usersPath = path.join(process.cwd(), 'src', 'lib', 'usersDB.json');
+import { supabase } from '@/lib/supabaseClient';
 
 export async function POST(req) {
   try {
     const { name, email, password } = await req.json();
+    console.log('Register API called', { name, email });
 
-    const users = JSON.parse(fs.readFileSync(usersPath, 'utf-8'));
+    // بررسی وجود کاربر
+    const { data: existingUsers, error: selectError } = await supabase
+      .from('users')
+      .select('*')
+      .eq('email', email);
 
-    const userExists = users.find(user => user.email === email);
-    if (userExists) {
+    // console.log('existingUsers:', existingUsers, 'selectError:', selectError);
+
+    if (selectError) throw selectError;
+
+    if (existingUsers && existingUsers.length > 0) {
       return NextResponse.json({ message: 'This email is already registered' }, { status: 400 });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newUser = {
-      id: Date.now(),
-      name,
-      email,
-      password: hashedPassword,
-    };
+    // درج کاربر جدید
+    const { data: newUserArr, error: insertError } = await supabase
+      .from('users')
+      .insert([{ name, email, password: hashedPassword }])
+      .select();
 
-    users.push(newUser);
+    // console.log('newUserArr:', newUserArr, 'insertError:', insertError);
 
-    fs.writeFileSync(usersPath, JSON.stringify(users, null, 2));
+    if (insertError) throw insertError;
+
+    const newUser = newUserArr[0];
 
     const token = jwt.sign(
       { id: newUser.id, name: newUser.name, email: newUser.email },

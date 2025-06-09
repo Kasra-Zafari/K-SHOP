@@ -1,18 +1,21 @@
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import fs from 'fs';
-import path from 'path';
-
-const usersPath = path.join(process.cwd(), 'src', 'lib', 'usersDB.json');
+import { supabase } from '@/lib/supabaseClient';
 
 export async function POST(req) {
   try {
     const { email, password } = await req.json();
 
-    const users = JSON.parse(fs.readFileSync(usersPath, 'utf-8'));
+    // پیدا کردن کاربر
+    const { data: users, error: selectError } = await supabase
+      .from('users')
+      .select('*')
+      .eq('email', email);
 
-    const user = users.find(user => user.email === email);
+    if (selectError) throw selectError;
+
+    const user = users && users.length > 0 ? users[0] : null;
     if (!user) {
       return NextResponse.json({ message: 'No user found with this email' }, { status: 401 });
     }

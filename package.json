@@ -2,6 +2,7 @@
   "name": "k-shop",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -16,8 +17,10 @@
     "@heroicons/react": "^2.2.0",
     "@hookform/resolvers": "^5.1.0",
     "@mui/material": "^7.1.0",
+    "@supabase/supabase-js": "^2.50.0",
     "bcryptjs": "^3.0.2",
     "clsx": "^2.1.1",
+    "dotenv": "^16.5.0",
     "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.511.0",
