@@ -15,11 +15,11 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
+      <body className="min-h-screen flex flex-col">
         <AuthProvider>
           <CartProvider>
             <Header />
-            {children}
+            <main className="flex-1 flex flex-col">{children}</main>
             <Footer />
           </CartProvider>
         </AuthProvider>
