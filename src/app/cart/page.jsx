@@ -31,51 +31,49 @@ export default function CartPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-10">
+    <div className="max-w-6xl mx-auto px-4 py-10">
       {/* نمایش تعداد کل آیتم‌ها کنار عنوان */}
       <h1 className="text-3xl font-bold mb-6 text-[#002AB3]">
         Shopping Cart ({totalItems} item{totalItems > 1 ? "s" : ""})
       </h1>
 
-      <div className="space-y-6">
+      <div className="space-y-8">
         {cartItems.map((item) => (
           <div
             key={item.id}
-            className="flex items-center gap-4 border-b pb-4"
+            className="flex items-center gap-8 border-b pb-6"
           >
             <Image
               src={item.thumbnail}
               alt={item.title}
-              width={100}
-              height={100}
+              width={120}
+              height={120}
               className="object-cover rounded"
             />
 
             <div className="flex-1">
               <h3 className="text-lg font-semibold text-[#002AB3]">{item.title}</h3>
               <p className="text-gray-600">
-                {/* تبدیل قیمت به فرمت ارزی */}
                 {formatPrice(item.price)} x {item.quantity}
               </p>
-              <div className="flex items-center gap-2 mt-2">
+              <div className="flex items-center gap-4 mt-2">
                 <button
                   onClick={() => decreaseQty(item.id)}
-                  className="px-2 py-1 bg-gray-200 hover:bg-gray-300 rounded"
+                  className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded"
                 >
                   -
                 </button>
-                <span>{item.quantity}</span>
+                <span className="font-bold">{item.quantity}</span>
                 <button
                   onClick={() => increaseQty(item.id)}
-                  className="px-2 py-1 bg-gray-200 hover:bg-gray-300 rounded"
+                  className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded"
                 >
                   +
                 </button>
               </div>
             </div>
 
-            <div className="flex flex-col items-end gap-2">
-              {/* تبدیل قیمت به فرمت ارزی */}
+            <div className="flex flex-col items-end gap-3">
               <p className="font-semibold text-[#002AB3]">{formatPrice(item.price * item.quantity)}</p>
               <button
                 onClick={() => removeFromCart(item.id)}
@@ -88,8 +86,8 @@ export default function CartPage() {
         ))}
       </div>
 
-      {/* بخش پایین صفحه: ادامه خرید و جمع کل و دکمه ادامه پرداخت */}
-      <div className="flex justify-between items-center mt-10 border-t pt-4">
+      {/* بخش پایین صفحه */}
+      <div className="flex flex-col md:flex-row justify-between items-center mt-10 border-t pt-6 gap-6">
         <Link
           href="/products/page/1"
           className="text-[#002AB3] hover:underline text-lg"
@@ -101,10 +99,9 @@ export default function CartPage() {
           Total: {formatPrice(totalPrice)}
         </p>
 
-        {/* دکمه ادامه پرداخت (می‌تونی لینکش رو تغییر بدی) */}
         <Link
           href="/checkout"
-          className="bg-[#002AB3] text-white px-4 py-2 rounded hover:bg-[#001A80]"
+          className="bg-[#002AB3] text-white px-6 py-3 rounded hover:bg-[#001A80]"
         >
           Proceed to Checkout
         </Link>
