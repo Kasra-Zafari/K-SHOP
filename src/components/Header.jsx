@@ -1,17 +1,35 @@
 'use client';
 
-import { useState } from "react";
-import Image from "next/image";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { ShoppingCart, LogIn, LogOut, Menu, User, X } from "lucide-react";
 import { useCart } from "@/app/context/CartContext";
-import { useAuth } from "@/app/context/AuthContext";
 
 export default function Header() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState(null);
   const { cartItems } = useCart();
-  const { isAuthenticated, logout } = useAuth();
+  const [isOpen, setIsOpen] = useState(false);
   const totalQuantity = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+
+  useEffect(() => {
+    fetch('/api/auth/me')
+      .then(res => res.ok ? res.json() : { user: null })
+      .then(data => {
+        setIsAuthenticated(!!data.user);
+        setUser(data.user);
+      });
+  }, []);
+
+  const logout = () => {
+    fetch('/api/auth/logout', { method: 'POST' })
+      .then(() => {
+        setIsAuthenticated(false);
+        setUser(null);
+        window.location.href = '/login';
+      });
+  };
 
   return (
     <header className="w-full bg-[#f2f2f2] px-4 py-4 shadow-sm">

@@ -28,20 +28,31 @@ export default function RegisterPage() {
   const onSubmit = async (data) => {
     setLoading(true);
     try {
+      const { name, email, password } = data;
       const res = await fetch('/api/auth/register', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ name, email, password }),
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
       });
 
       const result = await res.json();
 
-      if (res.ok && result.token) {
-        // Login user immediately after registration
-        login(result.token);
-        router.push('/profile');
+      if (res.ok) {
+        // After successful registration, login
+        const loginRes = await fetch('/api/auth/login', {
+          method: 'POST',
+          body: JSON.stringify({ email, password }),
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+        });
+        if (loginRes.ok) {
+          alert('Registration and login successful!');
+          window.location.href = '/profile'; // Full refresh to update header
+        } else {
+          alert('Registration was successful but automatic login failed. Please login manually.');
+          window.location.href = '/login';
+        }
       } else {
         alert(result.message || 'Registration failed');
       }

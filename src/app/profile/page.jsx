@@ -2,26 +2,22 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import jwt from 'jsonwebtoken';
-import { useAuth } from '@/app/context/AuthContext';
 
 export default function ProfilePage() {
-  const { token, isAuthenticated } = useAuth();
   const [user, setUser] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
-    if (!isAuthenticated || !token) {
-      router.push('/login');
-      return;
-    }
-    try {
-      const decoded = jwt.decode(token);
-      setUser(decoded);
-    } catch (err) {
-      router.push('/login');
-    }
-  }, [isAuthenticated, token, router]);
+    fetch('/api/auth/me')
+      .then(res => res.ok ? res.json() : { user: null })
+      .then(data => {
+        if (!data.user) {
+          router.push('/login');
+        } else {
+          setUser(data.user);
+        }
+      });
+  }, [router]);
 
   if (!user) {
     return (

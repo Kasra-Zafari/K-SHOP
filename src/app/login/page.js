@@ -39,7 +39,7 @@ export default function LoginPage() {
 
       if (res.ok && result.token) {
         login(result.token);
-        router.push('/profile');
+        window.location.href = '/profile';
       } else {
         setErrorMessage(result.error || result.message || 'Login failed');
       }
