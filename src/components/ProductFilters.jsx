@@ -134,8 +134,8 @@ export default function ProductFilters({ categories, brands }) {
             )}
 
             {/* دسته‌بندی */}
+            <h3 className={titleClass}>Category</h3>
             <div className={sectionClass}>
-                <h3 className={titleClass}>Category</h3>
                 {categories.map((category) => (
                     <label key={category} className="flex items-center">
                         <input
@@ -157,8 +157,8 @@ export default function ProductFilters({ categories, brands }) {
             </div>
 
             {/* برند */}
+            <h3 className={titleClass}>Brand</h3>
             <div className={sectionClass}>
-                <h3 className={titleClass}>Brand</h3>
                 {brands.map((brand) => (
                     <label key={brand} className="flex items-center">
                         <input
@@ -180,8 +180,8 @@ export default function ProductFilters({ categories, brands }) {
             </div>
 
             {/* محدوده قیمت */}
+            <h3 className={titleClass}>Price Range</h3>
             <div className={sectionClass}>
-                <h3 className={titleClass}>Price Range</h3>
                 {priceRanges.map((range) => (
                     <label key={range.value} className="flex items-center">
                         <input
@@ -203,8 +203,8 @@ export default function ProductFilters({ categories, brands }) {
             </div>
 
             {/* امتیاز */}
+            <h3 className={titleClass}>Minimum Rating</h3>
             <div className="border rounded p-3 bg-white">
-                <h3 className={titleClass}>Minimum Rating</h3>
                 <select
                     value={minRating}
                     onChange={handleRatingChange}
@@ -220,6 +220,7 @@ export default function ProductFilters({ categories, brands }) {
             </div>
 
             {/* موجودی و تخفیف */}
+            <h3 className={titleClass}>Other</h3>
             <div className="border rounded p-3 bg-white space-y-2 mt-4">
                 <label className="flex items-center">
                     <input
