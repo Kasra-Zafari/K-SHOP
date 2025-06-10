@@ -3,7 +3,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/app/context/AuthContext';
 import Link from 'next/link';
@@ -25,6 +25,19 @@ export default function LoginPage() {
 
   const [errorMessage, setErrorMessage] = useState('');
   const router = useRouter();
+
+  // Redirect if already logged in
+  useEffect(() => {
+    async function checkAuth() {
+      try {
+        const res = await fetch('/api/auth/me', { credentials: 'include' });
+        if (res.ok) {
+          router.replace('/profile');
+        }
+      } catch {}
+    }
+    checkAuth();
+  }, [router]);
 
   const onSubmit = async (data) => {
     setErrorMessage('');

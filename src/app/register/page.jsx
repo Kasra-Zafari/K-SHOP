@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const schema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -16,6 +16,19 @@ const schema = z.object({
 export default function RegisterPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+
+  // اگر لاگین بود ریدایرکت کن
+  useEffect(() => {
+    async function checkAuth() {
+      try {
+        const res = await fetch('/api/auth/me', { credentials: 'include' });
+        if (res.ok) {
+          router.replace('/profile');
+        }
+      } catch {}
+    }
+    checkAuth();
+  }, [router]);
 
   const {
     register,
@@ -28,7 +41,8 @@ export default function RegisterPage() {
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      const { name, email, password } = data;
+      const { name, password } = data;
+      const email = data.email.trim().toLowerCase(); // ایمیل را lowercase کن
       const res = await fetch('/api/auth/register', {
         method: 'POST',
         body: JSON.stringify({ name, email, password }),
