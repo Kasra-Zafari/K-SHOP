@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -49,6 +49,13 @@ function HomeSlider() {
 		setCurrent((prev) => (prev + 1) % sliderImages.length);
 	const prevSlide = () =>
 		setCurrent((prev) => (prev - 1 + sliderImages.length) % sliderImages.length);
+
+	useEffect(() => {
+		const timer = setInterval(() => {
+			setCurrent((prev) => (prev + 1) % sliderImages.length);
+		}, 4000);
+		return () => clearInterval(timer);
+	}, [current]);
 
 	return (
 		<div className="relative w-full max-w-4xl mx-auto mt-8 mb-12 rounded-xl overflow-hidden shadow-lg">
