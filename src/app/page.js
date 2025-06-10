@@ -37,9 +37,9 @@ const reviews = [
 ];
 
 const sliderImages = [
-	{ src: "/img/banner1.jpg", alt: "Banner 1" },
-	{ src: "/img/banner2.jpg", alt: "Banner 2" },
-	{ src: "/img/banner3.jpg", alt: "Banner 3" },
+	{ src: "/img/banner1.jpg", alt: "Banner 1", productId: 4 },
+	{ src: "/img/banner2.jpg", alt: "Banner 2", productId: 14 },
+	{ src: "/img/banner3.jpg", alt: "Banner 3", productId: 8 },
 ];
 
 function HomeSlider() {
@@ -59,15 +59,17 @@ function HomeSlider() {
 
 	return (
 		<div className="relative w-full max-w-4xl mx-auto mt-8 mb-12 rounded-xl overflow-hidden shadow-lg">
-			<Image
-				src={sliderImages[current].src}
-				alt={sliderImages[current].alt}
-				width={1200}
-				height={400}
-				style={{ width: "100%", height: "auto", objectFit: "cover" }}
-				className="w-full h-64 object-cover"
-				priority
-			/>
+			<Link href={`/products/${sliderImages[current].productId}`}>
+				<Image
+					src={sliderImages[current].src}
+					alt={sliderImages[current].alt}
+					width={1200}
+					height={400}
+					style={{ width: "100%", height: "auto", objectFit: "cover" }}
+					className="w-full h-64 object-cover"
+					priority
+				/>
+			</Link>
 			{/* دکمه‌های قبلی و بعدی */}
 			<button
 				onClick={prevSlide}
