@@ -13,12 +13,13 @@ export const metadata = {
   description: "Browse the latest products available on K-SHOP.",
 };
 
-export default async function ProductsPage({ params, searchParams }) {
-  // --- استخراج پارامترهای جستجو و فیلتر ---
+export default async function ProductsPage(props) {
+  const params = await props.params;
+  const searchParams = await props.searchParams;
+
   const page = +params.page || 1;
   const search = searchParams?.search?.trim().toLowerCase() || "";
   const sort = searchParams?.sort || "default";
-
   const selectedCategories = searchParams?.category?.split(",") || [];
   const selectedBrands = searchParams?.brand?.split(",") || [];
   const selectedPriceRanges = searchParams?.price?.split(",") || [];
@@ -34,7 +35,7 @@ export default async function ProductsPage({ params, searchParams }) {
 
   // --- دریافت اطلاعات محصولات از API ---
   try {
-    const headersList = headers();
+    const headersList = await headers(); // اینجا باید await باشد
     const host = headersList.get("host");
     const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
     const baseUrl = `${protocol}://${host}`;

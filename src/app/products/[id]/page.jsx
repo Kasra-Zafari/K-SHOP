@@ -10,7 +10,8 @@ async function getProduct(id) {
   return res.json();
 }
 
-export async function generateMetadata({ params }) {
+export async function generateMetadata(props) {
+  const params = await props.params;
   const product = await getProduct(params.id);
   if (!product) {
     return {
@@ -23,12 +24,13 @@ export async function generateMetadata({ params }) {
   };
 }
 
-export default async function ProductDetailsPage({ params }) {
+export default async function ProductDetailsPage(props) {
+  const params = await props.params;
   const product = await getProduct(params.id);
 
   if (!product) {
-  return <InvalidProductMessage />;
-}
+    return <InvalidProductMessage />;
+  }
 
   return (
     <div className="p-4">

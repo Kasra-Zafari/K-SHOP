@@ -19,10 +19,6 @@ export default function Header() {
       .then(data => {
         setIsAuthenticated(!!data.user);
         setUser(data.user);
-      })
-      .catch(() => {
-        setIsAuthenticated(false);
-        setUser(null);
       });
   }, []);
 
@@ -42,7 +38,7 @@ export default function Header() {
           <Image
             src="/k-shop-logo.png"
             alt="K-SHOP Logo"
-            width={180}
+            width={150}
             height={80}
             style={{ width: "auto" }}
             priority
