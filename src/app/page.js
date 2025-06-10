@@ -169,7 +169,7 @@ export default function Home() {
 							{review.name}
 						</h3>
 						<p className="text-gray-500 italic text-sm">
-							"{review.comment}"
+							&ldquo;{review.comment}&rdquo;
 						</p>
 					</div>
 				))}
