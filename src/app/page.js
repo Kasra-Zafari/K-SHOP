@@ -116,7 +116,7 @@ export default function Home() {
 				{categories.map((category) => (
 					<Link
 						key={category.name}
-						href={`/products?category=${category.name.toLowerCase()}`}
+						href={`/products/page/1?category=${category.name.toLowerCase()}`}
 						className="w-[48%] md:w-[22%] bg-white rounded-lg shadow hover:shadow-lg transition p-4 flex flex-col items-center"
 					>
 						<Image
