@@ -118,7 +118,7 @@ export default function Home() {
 						<Link
 							key={category.name}
 							href={`/products/page/1?category=${category.name.toLowerCase()}`}
-							className="w-[48%] md:w-[22%] bg-white rounded-lg shadow hover:shadow-lg transition p-4 flex flex-col items-center"
+							className="w-[48%] md:w-[24%] bg-white rounded-lg shadow hover:shadow-lg transition p-4 flex flex-col items-center"
 						>
 							<Image
 								src={category.image}
@@ -143,7 +143,7 @@ export default function Home() {
 					{benefits.map((benefit, idx) => (
 						<div
 							key={idx}
-							className="w-[48%] md:w-[22%] bg-white rounded-lg shadow hover:shadow-lg transition p-4 flex flex-col items-center"
+							className="w-[48%] md:w-[24%] bg-white rounded-lg shadow hover:shadow-lg transition p-4 flex flex-col items-center"
 						>
 							<span className="text-4xl mb-2">{benefit.icon}</span>
 							<h3 className="text-lg font-semibold text-gray-700 mb-1">
@@ -162,7 +162,7 @@ export default function Home() {
 					{reviews.map((review, idx) => (
 						<div
 							key={idx}
-							className="w-[48%] md:w-[30%] bg-white rounded-lg shadow hover:shadow-lg transition p-4 flex flex-col items-center"
+							className="w-[48%] md:w-[32%] bg-white rounded-lg shadow hover:shadow-lg transition p-4 flex flex-col items-center"
 						>
 							<Image
 								src={review.image}
