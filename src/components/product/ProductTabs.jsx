@@ -15,24 +15,19 @@ const ProductTabs = ({ product }) => {
   return (
     <div>
       {/* Tab buttons */}
-      <div className="flex gap-2 border-b border-gray-200 mb-4 overflow-x-auto whitespace-nowrap
-                      scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100
-                      -webkit-overflow-scrolling-touch">
+      <div className="flex gap-2 border-b border-gray-200 mb-4 overflow-x-auto whitespace-nowrap scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 -webkit-overflow-scrolling-touch">
         {tabs.map((tab) => (
           <button
             key={tab.key}
             onClick={() => setActiveTab(tab.key)}
-            className={`rounded-t-lg font-medium transition-all duration-200
-    px-2 py-1 text-xs
-    sm:px-4 sm:py-2 sm:text-base
-    ${activeTab === tab.key
+            className={`rounded-t-lg font-medium transition-all duration-200 px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-base ${
+              activeTab === tab.key
                 ? "bg-[#002AB3]/10 text-[#002AB3] border-b-2 border-[#002AB3]"
                 : "text-gray-500 hover:text-[#002AB3]"
-              }`}
+            }`}
           >
             {tab.label}
           </button>
-
         ))}
       </div>
 

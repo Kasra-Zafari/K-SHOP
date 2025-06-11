@@ -33,24 +33,26 @@ export default async function ProductDetailsPage(props) {
   }
 
   return (
-    <div className="p-4 max-w-7xl mx-auto">
-      <div className="bg-white p-4 md:p-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* image box */}
-          <div className="border border-[#002AB3] rounded-xl p-4 flex items-center justify-center h-full">
-            <ProductImage images={product.images} title={product.title} />
+    <div className="flex items-center justify-center bg-gray-50">
+      <div className="p-4 max-w-7xl w-full">
+        <div className="bg-white p-4 md:p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* image box */}
+            <div className="border border-[#002AB3] rounded-xl p-4 flex items-center justify-center h-full">
+              <ProductImage images={product.images} title={product.title} />
+            </div>
+
+            {/* info box */}
+            <div className="border border-[#002AB3] rounded-xl p-4 flex flex-col justify-between h-full">
+              <ProductInfo product={product} />
+              <AddToCartControls product={product} />
+            </div>
           </div>
 
-          {/* info box */}
-          <div className="border border-[#002AB3] rounded-xl p-4 flex flex-col justify-between h-full">
-            <ProductInfo product={product} />
-            <AddToCartControls product={product} />
+          {/* tabs box */}
+          <div className="mt-8 border border-[#002AB3] rounded-xl p-4">
+            <ProductTabs product={product} />
           </div>
-        </div>
-
-        {/* tabs box */}
-        <div className="mt-8 border border-[#002AB3] rounded-xl p-4">
-          <ProductTabs product={product} />
         </div>
       </div>
     </div>
