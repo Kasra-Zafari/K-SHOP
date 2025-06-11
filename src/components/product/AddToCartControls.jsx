@@ -26,28 +26,32 @@ export default function AddToCartControls({ product }) {
 
   if (quantity === 0) {
     return (
-      <button
-        onClick={() => addToCart(product)}
-        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-      >
-        Add to Cart
-      </button>
+      <div className="flex justify-center items-center">
+        <button
+          onClick={() => addToCart(product)}
+          className="bg-[#002AB3] text-white w-40 h-10 py-1 rounded hover:bg-[#72B7F2] text-lg mb-10"
+        >
+          Add to Cart
+        </button>
+      </div>
     );
   }
 
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center gap-4 justify-center mb-10">
       <button
         onClick={decrement}
-        className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
+        className="bg-[#002AB3] text-white w-10 h-10 rounded hover:bg-[#72B7F2] text-lg"
         aria-label="Decrease quantity"
       >
         -
       </button>
-      <span className="text-lg font-semibold">{quantity}</span>
+      <span className="text-lg font-semibold text-[#002AB3] w-6 text-center">
+        {quantity}
+      </span>
       <button
         onClick={increment}
-        className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
+        className="bg-[#002AB3] text-white w-10 h-10 rounded hover:bg-[#72B7F2] text-lg"
         aria-label="Increase quantity"
       >
         +
