@@ -106,82 +106,83 @@ function HomeSlider() {
 export default function Home() {
 	return (
 		<main className="bg-gray-50 flex flex-col items-center text-center min-h-screen">
-			<HomeSlider />
+			<div className="w-full max-w-7xl mx-auto px-4">
+				<HomeSlider />
 
-			{/* دسته‌بندی‌ها */}
-			<h2 className="text-2xl md:text-3xl font-bold text-gray-800 mt-12 mb-6">
-				Shop by Category
-			</h2>
-			<div className="flex flex-wrap justify-center md:justify-between gap-4 w-full mb-12 max-w-7xl mx-auto">
-				{categories.map((category) => (
-					<Link
-						key={category.name}
-						href={`/products/page/1?category=${category.name.toLowerCase()}`}
-						className="w-[48%] md:w-[22%] bg-white rounded-lg shadow hover:shadow-lg transition p-4 flex flex-col items-center"
-					>
-						<Image
-							src={category.image}
-							alt={category.name}
-							width={120}
-							height={80}
-							style={{ width: "180px", height: "180px", objectFit: "cover" }}
-							className="rounded mb-2"
-						/>
-						<h3 className="text-lg font-semibold text-gray-700">
-							{category.name}
-						</h3>
-					</Link>
-				))}
-			</div>
+				{/* دسته‌بندی‌ها */}
+				<h2 className="text-2xl md:text-3xl font-bold text-gray-800 mt-12 mb-6">
+					Shop by Category
+				</h2>
+				<div className="flex flex-wrap justify-center gap-3 w-full mb-12">
+					{categories.map((category) => (
+						<Link
+							key={category.name}
+							href={`/products/page/1?category=${category.name.toLowerCase()}`}
+							className="w-[48%] md:w-[22%] bg-white rounded-lg shadow hover:shadow-lg transition p-4 flex flex-col items-center"
+						>
+							<Image
+								src={category.image}
+								alt={category.name}
+								width={120}
+								height={80}
+								style={{ width: "180px", height: "180px", objectFit: "cover" }}
+								className="rounded mb-2"
+							/>
+							<h3 className="text-lg font-semibold text-gray-700">
+								{category.name}
+							</h3>
+						</Link>
+					))}
+				</div>
 
-			{/* مزایا */}
-			<h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6">
-				Why Shop With Us?
-			</h2>
-			<div className="flex flex-wrap justify-center md:justify-between gap-4 w-full mb-12 max-w-7xl mx-auto">
-				{benefits.map((benefit, idx) => (
-					<div
-						key={idx}
-						className="w-[48%] md:w-[22%] bg-white rounded-lg shadow hover:shadow-lg transition p-4 flex flex-col items-center"
-					>
-						<span className="text-4xl mb-2 hover:grayscale-0 transition">
-							{benefit.icon}
-						</span>
-						<h3 className="text-lg font-semibold text-gray-700 mb-1">
-							{benefit.title}
-						</h3>
-						<p className="text-gray-500 text-sm">{benefit.desc}</p>
-					</div>
-				))}
-			</div>
+				{/* مزایا */}
+				<h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6">
+					Why Shop With Us?
+				</h2>
+				<div className="flex flex-wrap justify-center gap-3 w-full mb-12">
+					{benefits.map((benefit, idx) => (
+						<div
+							key={idx}
+							className="w-[48%] md:w-[22%] bg-white rounded-lg shadow hover:shadow-lg transition p-4 flex flex-col items-center"
+						>
+							<span className="text-4xl mb-2">{benefit.icon}</span>
+							<h3 className="text-lg font-semibold text-gray-700 mb-1">
+								{benefit.title}
+							</h3>
+							<p className="text-gray-500 text-sm text-center">{benefit.desc}</p>
+						</div>
+					))}
+				</div>
 
-			{/* نظرات مشتریان */}
-			<h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6">
-				Customer Reviews
-			</h2>
-			<div className="flex flex-wrap justify-center md:justify-between gap-4 w-full mb-16 max-w-7xl mx-auto">
-				{reviews.map((review, idx) => (
-					<div
-						key={idx}
-						className="w-[48%] md:w-[30%] bg-white rounded-lg shadow hover:shadow-lg transition p-4 flex flex-col items-center"
-					>
-						<Image
-							src={review.image}
-							alt={review.name}
-							width={60}
-							height={60}
-							style={{ width: "60px", height: "60px", objectFit: "cover" }}
-							className="rounded-full mb-2"
-						/>
-						<h3 className="text-base font-semibold text-gray-700 mb-1">
-							{review.name}
-						</h3>
-						<p className="text-gray-500 italic text-sm">
-							&ldquo;{review.comment}&rdquo;
-						</p>
-					</div>
-				))}
+				{/* نظرات مشتریان */}
+				<h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6">
+					Customer Reviews
+				</h2>
+				<div className="flex flex-wrap justify-center gap-3 w-full mb-16">
+					{reviews.map((review, idx) => (
+						<div
+							key={idx}
+							className="w-[48%] md:w-[30%] bg-white rounded-lg shadow hover:shadow-lg transition p-4 flex flex-col items-center"
+						>
+							<Image
+								src={review.image}
+								alt={review.name}
+								width={60}
+								height={60}
+								style={{ width: "60px", height: "60px", objectFit: "cover" }}
+								className="rounded-full mb-2"
+							/>
+							<h3 className="text-base font-semibold text-gray-700 mb-1">
+								{review.name}
+							</h3>
+							<p className="text-gray-500 italic text-sm text-center">
+								&ldquo;{review.comment}&rdquo;
+							</p>
+						</div>
+					))}
+				</div>
 			</div>
 		</main>
+
 	);
 }
