@@ -58,7 +58,7 @@ function HomeSlider() {
 	}, [current]);
 
 	return (
-		<div className="relative w-full max-w-4xl mx-auto mt-8 mb-12 rounded-xl overflow-hidden shadow-lg">
+		<div className="relative w-full max-w-7xl mx-auto mt-8 mb-12 rounded-xl overflow-hidden shadow-lg">
 			<Link href={`/products/${sliderImages[current].productId}`}>
 				<Image
 					src={sliderImages[current].src}
@@ -91,11 +91,10 @@ function HomeSlider() {
 					<button
 						key={idx}
 						onClick={() => setCurrent(idx)}
-						className={`w-3 h-3 rounded-full ${
-							current === idx
-								? "bg-[#002AB3]"
-								: "bg-white border border-[#002AB3]"
-						}`}
+						className={`w-3 h-3 rounded-full ${current === idx
+							? "bg-[#002AB3]"
+							: "bg-white border border-[#002AB3]"
+							}`}
 						aria-label={`Go to slide ${idx + 1}`}
 					/>
 				))}
@@ -113,19 +112,19 @@ export default function Home() {
 			<h2 className="text-2xl md:text-3xl font-bold text-gray-800 mt-12 mb-6">
 				Shop by Category
 			</h2>
-			<div className="flex flex-wrap justify-center gap-6 w-full mb-12 p-0">
+			<div className="flex flex-wrap justify-center md:justify-between gap-4 w-full mb-12 max-w-7xl mx-auto">
 				{categories.map((category) => (
 					<Link
 						key={category.name}
 						href={`/products?category=${category.name.toLowerCase()}`}
-						className="w-40 bg-white rounded-lg shadow hover:shadow-lg transition p-4 flex flex-col items-center"
+						className="w-[48%] md:w-[22%] bg-white rounded-lg shadow hover:shadow-lg transition p-4 flex flex-col items-center"
 					>
 						<Image
 							src={category.image}
 							alt={category.name}
 							width={120}
 							height={80}
-							style={{ width: "120px", height: "80px", objectFit: "cover" }}
+							style={{ width: "180px", height: "180px", objectFit: "cover" }}
 							className="rounded mb-2"
 						/>
 						<h3 className="text-lg font-semibold text-gray-700">
@@ -139,13 +138,13 @@ export default function Home() {
 			<h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6">
 				Why Shop With Us?
 			</h2>
-			<div className="flex flex-wrap justify-center gap-6 w-full mb-12">
+			<div className="flex flex-wrap justify-center md:justify-between gap-4 w-full mb-12 max-w-7xl mx-auto">
 				{benefits.map((benefit, idx) => (
 					<div
 						key={idx}
-						className="w-52 bg-white rounded-lg shadow p-6 flex flex-col items-center hover:scale-105 transition"
+						className="w-[48%] md:w-[22%] bg-white rounded-lg shadow hover:shadow-lg transition p-4 flex flex-col items-center"
 					>
-						<span className="text-4xl mb-2 grayscale hover:grayscale-0 transition">
+						<span className="text-4xl mb-2 hover:grayscale-0 transition">
 							{benefit.icon}
 						</span>
 						<h3 className="text-lg font-semibold text-gray-700 mb-1">
@@ -160,11 +159,11 @@ export default function Home() {
 			<h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6">
 				Customer Reviews
 			</h2>
-			<div className="flex flex-wrap justify-center gap-6 w-full mb-16">
+			<div className="flex flex-wrap justify-center md:justify-between gap-4 w-full mb-16 max-w-7xl mx-auto">
 				{reviews.map((review, idx) => (
 					<div
 						key={idx}
-						className="w-72 bg-white rounded-lg shadow p-6 flex flex-col items-center"
+						className="w-[48%] md:w-[30%] bg-white rounded-lg shadow hover:shadow-lg transition p-4 flex flex-col items-center"
 					>
 						<Image
 							src={review.image}
