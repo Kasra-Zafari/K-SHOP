@@ -19,7 +19,11 @@ export default function ProductFilters({ categories, brands }) {
     const [showMobileFilters, setShowMobileFilters] = useState(false);
 
     const priceRanges = [
-    { label: "$0 - $200", value: "0-200" },
+    { label: "$0 - $15", value: "0-15" },
+    { label: "$15 - $30", value: "15-30" },
+    { label: "$30 - $50", value: "30-50" },
+    { label: "$50 - $100", value: "50-100" },
+    { label: "$100 - $200", value: "100-200" },
     { label: "$200 - $400", value: "200-400" },
     { label: "$400 - $600", value: "400-600" },
     { label: "$600 - $800", value: "600-800" },
