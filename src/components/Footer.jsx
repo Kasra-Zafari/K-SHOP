@@ -4,7 +4,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
         <div>
           <h2 className="font-bold text-lg">K-SHOP</h2>
-          <p className="text-sm text-[#002AB3]">© 2025 K-SHOP. All rights reserved.</p>
+          <p className="text-sm text-[#72B7F2]">© 2025 K-SHOP. All rights reserved.</p>
         </div>
 
         <nav className="flex gap-6 text-sm">
