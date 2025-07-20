@@ -1,0 +1,45 @@
+{
+  "name": "k-shop",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "dev:api": "json-server --watch db.json --port 4000"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@headlessui/react": "^2.2.4",
+    "@heroicons/react": "^2.2.0",
+    "@hookform/resolvers": "^5.1.0",
+    "@mui/material": "^7.1.0",
+    "@supabase/supabase-js": "^2.50.0",
+    "bcryptjs": "^3.0.2",
+    "clsx": "^2.1.1",
+    "dotenv": "^16.5.0",
+    "js-cookie": "^3.0.5",
+    "jsonwebtoken": "^9.0.2",
+    "lucide-react": "^0.511.0",
+    "next": "15.3.2",
+    "normalize.css": "^8.0.1",
+    "rc-slider": "^11.1.8",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.57.0",
+    "react-slider": "^2.0.6",
+    "zod": "^3.25.56"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/aspect-ratio": "^0.4.2",
+    "@tailwindcss/postcss": "^4",
+    "eslint": "^9",
+    "eslint-config-next": "15.3.2",
+    "json-server": "^1.0.0-beta.3",
+    "tailwindcss": "^4"
+  }
+}
